@@ -3,7 +3,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2 } from 'lucide-react';
+import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
     Select,
     SelectContent,
@@ -20,6 +26,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Modal, { type ModalState, useModal } from '@/components/modal.component';
 import ConfirmModal from '@/components/confirm.component';
+import FacultyUpdateModal from '@/pages/dashboard/faculty/faculty-update.modal';
 import { z } from 'zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,7 +49,7 @@ type UserSearchFormValues = z.infer<typeof userSearchSchema>;
 
 type StudentRow = EnrollmentBackdoorDto & Record<string, unknown>;
 
-function buildStudentColumns(onDelete: (row: StudentRow) => void): TableColumn<StudentRow>[] {
+function buildStudentColumns(onEdit: (row: StudentRow) => void, onDelete: (row: StudentRow) => void): TableColumn<StudentRow>[] {
     return [
     {
         header: 'Student',
@@ -104,15 +111,25 @@ function buildStudentColumns(onDelete: (row: StudentRow) => void): TableColumn<S
         header: 'Actions',
         accessor: 'id',
         render: (_, row) => (
-            <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="text-destructive hover:text-destructive"
-                onClick={() => onDelete(row)}
-            >
-                <Trash2 className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center justify-center">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem className="cursor-pointer flex items-center gap-2" onClick={() => onEdit(row)}>
+                            <Pencil className="h-4 w-4" />
+                            <span>Edit</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="cursor-pointer flex items-center gap-2 text-destructive" onClick={() => onDelete(row)}>
+                            <Trash2 className="h-4 w-4" />
+                            <span>Delete</span>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         ),
     },
 ];
@@ -380,8 +397,16 @@ export default function FacultySectionsPage(): React.ReactNode {
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState(10);
     const addStudentModalState = useModal<EnrollmentBackdoorDto>();
+    const editStudentModalState = useModal<EnrollmentBackdoorDto>();
     const deleteStudentModalState = useModal<EnrollmentBackdoorDto>();
     const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleUpdated = (updated: EnrollmentBackdoorDto) => {
+        setStudentsResponse((prev) => ({
+            ...prev,
+            data: prev.data.map((entry) => (entry.id === updated.id ? { ...entry, ...updated } : entry)),
+        }));
+    };
 
     const handleDelete = async (record: EnrollmentBackdoorDto) => {
         setIsDeleting(true);
@@ -557,7 +582,10 @@ export default function FacultySectionsPage(): React.ReactNode {
             </div>
 
             <DataTable<StudentRow>
-                columns={buildStudentColumns((row) => deleteStudentModalState.openFn(row as EnrollmentBackdoorDto))}
+                columns={buildStudentColumns(
+                    (row) => editStudentModalState.openFn(row as EnrollmentBackdoorDto),
+                    (row) => deleteStudentModalState.openFn(row as EnrollmentBackdoorDto),
+                )}
                 data={studentsResponse.data as StudentRow[]}
                 isLoading={isLoadingStudents}
                 totalPage={studentsResponse.paginationMeta.totalPages}
@@ -568,6 +596,7 @@ export default function FacultySectionsPage(): React.ReactNode {
             />
 
             <AddStudentModal state={addStudentModalState} />
+            <FacultyUpdateModal state={editStudentModalState} onUpdated={handleUpdated} />
             <ConfirmModal<EnrollmentBackdoorDto>
                 state={deleteStudentModalState}
                 title="Remove Student"

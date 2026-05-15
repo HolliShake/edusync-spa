@@ -178,6 +178,16 @@ export interface CampusDto {
   cycles?: CycleDto[];
 }
 
+export interface CollegeDto {
+  id: number;
+  collegeName: string;
+  collegeShortName: string;
+  campusId: number;
+  campus?: CampusDto;
+}
+
+
+
 export interface EnrollmentBackdoorDto {
   id: number;
   sectionName: string;

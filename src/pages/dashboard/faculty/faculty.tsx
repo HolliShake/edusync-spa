@@ -148,7 +148,7 @@ export default function FacultyPage() {
     const handleSelect = (value: EnrollmentBackdoorDto) => {
         if (!value) return;
         localStorage.setItem('selected-faculty', JSON.stringify(value));
-        navigate('/faculty/sections?' + buildQuery({'userId': 'userId', 'sectionName': 'sectionName', 'cycleId': 'cycleId', 'courseId': 'courseId', 'academicProgramId': 'programId'}, value));
+        navigate('/enrollment-backdoor/faculty/sections?' + buildQuery({'userId': 'userId', 'sectionName': 'sectionName', 'cycleId': 'cycleId', 'courseId': 'courseId', 'academicProgramId': 'programId'}, value));
     };
 
     useEffect(() => {

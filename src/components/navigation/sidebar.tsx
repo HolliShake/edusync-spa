@@ -74,7 +74,7 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
               <button
                 type="button"
                 className={cn(
-                  'flex min-w-0 flex-1 items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-all',
+                  'flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-[13px] font-medium transition-all',
                   'border border-transparent hover:border-sidebar-border hover:bg-sidebar-accent',
                   'focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:outline-none',
                   isExpanded && 'border-sidebar-primary/30 bg-sidebar-primary/15 text-sidebar-foreground',
@@ -84,7 +84,7 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
                 aria-expanded={isExpanded}
                 aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${route.label}`}
               >
-                <span className={cn('flex size-9 shrink-0 items-center justify-center rounded-xl', isExpanded && 'bg-sidebar-primary/20')}>
+                <span className={cn('flex size-7 shrink-0 items-center justify-center rounded-lg', isExpanded && 'bg-sidebar-primary/20')}>
                   {renderIcon(route.icon, isExpanded)}
                 </span>
                 {!isCollapsed && <span className="truncate">{route.label}</span>}
@@ -97,7 +97,7 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
                 to={route.path}
                 className={({ isActive }) =>
                   cn(
-                    'flex min-w-0 flex-1 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all',
+                    'flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all',
                     'border border-transparent hover:border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
                     'focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:outline-none',
                     isActive && 'border-sidebar-primary/30 bg-sidebar-primary/15 text-sidebar-foreground',
@@ -105,7 +105,7 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
                   )
                 }
               >
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-sidebar-accent/60">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-sidebar-accent/60">
                   {renderIcon(route.icon)}
                 </span>
                 {!isCollapsed && <span className="truncate">{route.label}</span>}
