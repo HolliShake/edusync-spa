@@ -26,7 +26,7 @@ export default function PageLayout({
 
     return (
         <div className="flex flex-col h-auto gap-4 w-full min-w-0 px-6 py-10">
-            <div className="flex items-start justify-between gap-4 px-4 pt-4 shrink-0">
+            <div className="flex items-start justify-between gap-4 shrink-0">
                 <div>
                     <h1 className="text-2xl font-bold">{title}</h1>
                 <p className="text-muted-foreground">{description}</p>

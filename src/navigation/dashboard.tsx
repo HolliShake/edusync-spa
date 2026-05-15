@@ -17,26 +17,35 @@ export const DASHROUTES: Route[] = [
         dashboard: true
     },
     {
-        label: "Faculty",
-        path: "/faculty",
+        label: "Enrollment Backdoor",
+        path: "/enrollment-backdoor",
         icon: <UserCog2 />,
         component: <FacultyPage />,
-        children: [],
-        dashboard: true
-    },
-    {
-        label: "Faculty",
-        path: "/faculty/sections",
-        component: <FacultySectionsPage />,
-        children: [],
-        dashboard: true,
-        subroute: true
-    },
-    {
-        label: "Student",
-        path: "/auth/student",
-        icon: <GraduationCap />,
-        children: [],
+        children: [
+            {
+                label: "Faculty",
+                path: "/enrollment-backdoor/faculty",
+                icon: <UserCog2 />,
+                component: <FacultyPage />,
+                children: [],
+                dashboard: true
+            },
+            {
+                label: "Faculty",
+                path: "/enrollment-backdoor/faculty/sections",
+                component: <FacultySectionsPage />,
+                children: [],
+                dashboard: true,
+                subroute: true
+            },
+            {
+                label: "Student",
+                path: "/enrollment-backdoor/auth/student",
+                icon: <GraduationCap />,
+                children: [],
+                dashboard: true
+            }
+        ],
         dashboard: true
     }
 ];

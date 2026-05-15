@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Trash2 } from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -18,10 +19,31 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Modal, { type ModalState, useModal } from '@/components/modal.component';
+import ConfirmModal from '@/components/confirm.component';
+import { z } from 'zod';
+import { useForm, useWatch } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const createEnrollmentSchema = z.object({
+    userId: z.string().min(1, 'User is required'),
+    sectionName: z.string().min(1, 'Section name is required'),
+    cycleId: z.number().int().positive('Cycle is required'),
+    academicProgramId: z.number().int().positive('Academic program is required'),
+    courseId: z.number().int().positive('Course is required'),
+    campusCode: z.string().min(1, 'Campus code is required'),
+    enrollmentRoleId: z.number().int().positive('Enrollment role is required'),
+});
+
+const userSearchSchema = z.object({
+    search: z.string(),
+});
+
+type UserSearchFormValues = z.infer<typeof userSearchSchema>;
 
 type StudentRow = EnrollmentBackdoorDto & Record<string, unknown>;
 
-const STUDENT_COLUMNS: TableColumn<StudentRow>[] = [
+function buildStudentColumns(onDelete: (row: StudentRow) => void): TableColumn<StudentRow>[] {
+    return [
     {
         header: 'Student',
         accessor: 'user.fullName',
@@ -78,7 +100,23 @@ const STUDENT_COLUMNS: TableColumn<StudentRow>[] = [
             </Badge>
         ),
     },
+    {
+        header: 'Actions',
+        accessor: 'id',
+        render: (_, row) => (
+            <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="text-destructive hover:text-destructive"
+                onClick={() => onDelete(row)}
+            >
+                <Trash2 className="h-4 w-4" />
+            </Button>
+        ),
+    },
 ];
+}
 
 const EMPTY_STUDENTS: GetPaginatedResponseDto<EnrollmentBackdoorDto> = {
     data: [],
@@ -110,15 +148,21 @@ const EMPTY_USERS: GetPaginatedResponseDto<PaginatedUser> = {
 
 
 
-function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }) : React.ReactNode {
+function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }): React.ReactNode {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [usersResponse, setUsersResponse] = useState<GetPaginatedResponseDto<PaginatedUser>>(EMPTY_USERS);
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-    const [userSearch, setUserSearch] = useState('');
     const [debouncedUserSearch, setDebouncedUserSearch] = useState('');
     const [selectedUserId, setSelectedUserId] = useState('');
     const [userPage, setUserPage] = useState(1);
     const [userRows, setUserRows] = useState(10);
+
+    const { register, control } = useForm<UserSearchFormValues>({
+        resolver: zodResolver(userSearchSchema),
+        defaultValues: { search: '' },
+    });
+
+    const userSearch = useWatch({ control, name: 'search' });
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -169,15 +213,24 @@ function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }
                 .replaceAll('-', '')
                 .replaceAll('_', '')
                 .toLowerCase();
-            const payload = {
+
+            const parsed = createEnrollmentSchema.safeParse({
                 userId,
                 sectionName: state.data?.sectionName ?? '',
                 cycleId: state.data?.cycleId ?? 0,
                 academicProgramId: state.data?.academicProgramId ?? 0,
                 courseId: state.data?.courseId ?? 0,
                 campusCode: nomalizedCampusCode,
-                enrollmentRoleId: 1, // Assuming '1' corresponds to the default student role
-            };
+                enrollmentRoleId: 1,
+            });
+
+            if (!parsed.success) {
+                const messages = parsed.error.issues.map((e) => e.message).join(', ');
+                toast.error(`Validation failed: ${messages}`);
+                return;
+            }
+
+            const payload = parsed.data;
 
             const response = await fetchData('POST', 'EnrollmentBackdoor/create', {
                 headers: {
@@ -207,10 +260,9 @@ function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }
                     <Label htmlFor="user-search">Search User</Label>
                     <Input
                         id="user-search"
-                        value={userSearch}
-                        onChange={(event) => setUserSearch(event.target.value)}
                         placeholder="Search by name or email..."
                         disabled={isLoadingUsers || isSubmitting}
+                        {...register('search')}
                     />
                 </div>
 
@@ -293,14 +345,14 @@ function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }
                 </div>
 
                 <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={state.closeFn} disabled={isSubmitting}>
+                    <Button variant="outline" onClick={state.closeFn} disabled={isSubmitting || selectedUserId?.length <= 0}>
                         Cancel
                     </Button>
                     <Button
                         onClick={() => createNewStudent(selectedUserId)}
                         disabled={!selectedUserId || isSubmitting}
                     >
-                        {isSubmitting ? 'Creating...' : 'Create'}
+                        {isSubmitting ? 'Submitting...' : 'Enroll Student'}
                     </Button>
                 </div>
             </div>
@@ -328,6 +380,32 @@ export default function FacultySectionsPage(): React.ReactNode {
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState(10);
     const addStudentModalState = useModal<EnrollmentBackdoorDto>();
+    const deleteStudentModalState = useModal<EnrollmentBackdoorDto>();
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async (record: EnrollmentBackdoorDto) => {
+        setIsDeleting(true);
+        try {
+            const response = await fetchData('DELETE', `EnrollmentBackdoor/delete/${record.id}`);
+            if (!response.ok) throw new Error('Failed to delete enrollment');
+            toast.success('Student removed successfully.');
+            deleteStudentModalState.closeFn();
+            // Re-trigger student fetch by resetting page or nudging state
+            setPage((p) => p);
+            setStudentsResponse((prev) => ({
+                ...prev,
+                data: prev.data.filter((s) => s.id !== record.id),
+                paginationMeta: {
+                    ...prev.paginationMeta,
+                    totalItems: prev.paginationMeta.totalItems - 1,
+                },
+            }));
+        } catch {
+            toast.error('Failed to remove student. Please try again.');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
     useEffect(() => {
         if (!selectedFaculty) {
@@ -454,7 +532,7 @@ export default function FacultySectionsPage(): React.ReactNode {
                         variant="default"
                         onClick={() => addStudentModalState.openFn(selectedFaculty)}
                     >
-                        Create
+                        Enroll Student
                     </Button>
                     <span className="text-sm text-muted-foreground">Rows per page</span>
                     <Select value={String(rows)} onValueChange={handleRowsChange}>
@@ -479,7 +557,7 @@ export default function FacultySectionsPage(): React.ReactNode {
             </div>
 
             <DataTable<StudentRow>
-                columns={STUDENT_COLUMNS}
+                columns={buildStudentColumns((row) => deleteStudentModalState.openFn(row as EnrollmentBackdoorDto))}
                 data={studentsResponse.data as StudentRow[]}
                 isLoading={isLoadingStudents}
                 totalPage={studentsResponse.paginationMeta.totalPages}
@@ -490,6 +568,23 @@ export default function FacultySectionsPage(): React.ReactNode {
             />
 
             <AddStudentModal state={addStudentModalState} />
+            <ConfirmModal<EnrollmentBackdoorDto>
+                state={deleteStudentModalState}
+                title="Remove Student"
+                description={(data) => {
+                    const name = data?.user?.fullName ?? data?.user?.email ?? `ID ${data?.id}`;
+                    return (
+                        <>
+                            Are you sure you want to remove{' '}
+                            <span className="font-semibold text-foreground">{name}</span> from this
+                            section? This action cannot be undone.
+                        </>
+                    );
+                }}
+                confirmLabel="Remove"
+                isLoading={isDeleting}
+                onConfirm={handleDelete}
+            />
         </PageLayout>
     );
 }
