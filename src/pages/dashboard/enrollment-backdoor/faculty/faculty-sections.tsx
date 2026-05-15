@@ -26,7 +26,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Modal, { type ModalState, useModal } from '@/components/modal.component';
 import ConfirmModal from '@/components/confirm.component';
-import FacultyUpdateModal from '@/pages/dashboard/faculty/faculty-update.modal';
+import FacultyUpdateModal from '@/pages/dashboard/enrollment-backdoor/faculty/faculty-update.modal';
 import { z } from 'zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -1,9 +1,9 @@
 import type { Route } from "@/types";
 import { GraduationCap, LayoutDashboardIcon, UserCog2 } from "lucide-react";
 import DashboardHomePage from "@/pages/dashboard/home";
-import FacultyPage from "@/pages/dashboard/faculty/faculty";
-import FacultySectionsPage from "@/pages/dashboard/faculty/faculty-sections";
-import StudentPage from "@/pages/dashboard/student/student";
+import FacultyPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty";
+import FacultySectionsPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty-sections";
+import StudentPage from "@/pages/dashboard/enrollment-backdoor/student/student";
 
 
 

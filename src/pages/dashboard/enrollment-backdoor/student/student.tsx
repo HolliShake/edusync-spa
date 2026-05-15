@@ -24,7 +24,7 @@ import PageLayout from '@/components/page.component';
 import type { EnrollmentBackdoorDto, GetPaginatedResponseDto } from '@/types';
 import { fetchData } from '@/lib/fetch';
 import { useModal } from '@/components/modal.component';
-import FacultyCreateModal from '@/pages/dashboard/faculty/faculty-create.modal';
+import FacultyCreateModal from '@/pages/dashboard/enrollment-backdoor/faculty/faculty-create.modal';
 import StudentUpdateModal from './student-update.modal';
 import StudentTransferModal from './student-transfer.modal';
 
