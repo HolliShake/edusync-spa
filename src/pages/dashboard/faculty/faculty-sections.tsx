@@ -1,0 +1,497 @@
+import { fetchData } from '@/lib/fetch';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import DataTable, { type TableColumn } from '@/components/table.component';
+import PageLayout from '@/components/page.component';
+import { toast } from 'sonner';
+import type { GetPaginatedResponseDto, EnrollmentBackdoorDto } from '@/types';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import Modal, { type ModalState, useModal } from '@/components/modal.component';
+
+type StudentRow = EnrollmentBackdoorDto & Record<string, unknown>;
+
+const STUDENT_COLUMNS: TableColumn<StudentRow>[] = [
+    {
+        header: 'Student',
+        accessor: 'user.fullName',
+        render: (_, row) => <span className="font-medium">{row.user?.fullName ?? 'N/A'}</span>,
+    },
+    {
+        header: 'Email',
+        accessor: 'user.email',
+        render: (_, row) => row.user?.email ?? 'N/A',
+    },
+    {
+        header: 'Section',
+        accessor: 'sectionName',
+    },
+    {
+        header: 'Program',
+        accessor: 'academicProgram.shortName',
+        render: (_, row) => (
+            <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-medium">{row.academicProgram?.shortName ?? '—'}</span>
+                <span className="text-xs text-muted-foreground">{row.academicProgram?.programName}</span>
+            </div>
+        ),
+    },
+    {
+        header: 'Course',
+        accessor: 'course.courseCode',
+        render: (_, row) => (
+            <div className="flex flex-col gap-0.5">
+                <span className="text-sm font-medium">{row.course?.courseCode ?? '—'}</span>
+                <span className="text-xs text-muted-foreground">{row.course?.courseTitle}</span>
+                <span className="text-xs text-muted-foreground">{row.course?.courseDescription || 'No description'}</span>
+                <span className="text-xs text-muted-foreground">{`Units: ${row.course?.lectureUnits ?? 0}Lec / ${row.course?.laboratoryUnits ?? 0}Lab / ${row.course?.creditUnits ?? 0}Cr`}</span>
+                <span className="text-xs text-muted-foreground">{row.course?.withLaboratory ? 'With Laboratory' : 'No Laboratory'}</span>
+            </div>
+        ),
+    },
+    {
+        header: 'Year',
+        accessor: 'yearLevel',
+        render: (value) => <Badge variant="outline">{value as string}</Badge>,
+    },
+    {
+        header: 'Term',
+        accessor: 'termNumber',
+        render: (value) => <Badge variant="outline">{value as string}</Badge>,
+    },
+    {
+        header: 'Role',
+        accessor: 'enrollmentRole.enrollmentRoleName',
+        render: (_, row) => (
+            <Badge variant="secondary">
+                {row.enrollmentRole?.enrollmentRoleName ?? row.enrollmentRole?.roleName ?? 'Student/Learner'}
+            </Badge>
+        ),
+    },
+];
+
+const EMPTY_STUDENTS: GetPaginatedResponseDto<EnrollmentBackdoorDto> = {
+    data: [],
+    paginationMeta: {
+        page: 1,
+        rows: 10,
+        totalPages: 1,
+        totalItems: 0,
+    },
+};
+
+type PaginatedUser = {
+    id: string;
+    email?: string;
+    userName?: string;
+    fullName?: string;
+    role?: string;
+};
+
+const EMPTY_USERS: GetPaginatedResponseDto<PaginatedUser> = {
+    data: [],
+    paginationMeta: {
+        page: 1,
+        rows: 50,
+        totalPages: 1,
+        totalItems: 0,
+    },
+};
+
+
+
+function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }) : React.ReactNode {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [usersResponse, setUsersResponse] = useState<GetPaginatedResponseDto<PaginatedUser>>(EMPTY_USERS);
+    const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+    const [userSearch, setUserSearch] = useState('');
+    const [debouncedUserSearch, setDebouncedUserSearch] = useState('');
+    const [selectedUserId, setSelectedUserId] = useState('');
+    const [userPage, setUserPage] = useState(1);
+    const [userRows, setUserRows] = useState(10);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedUserSearch(userSearch.trim());
+            setUserPage(1);
+        }, 400);
+
+        return () => clearTimeout(timer);
+    }, [userSearch]);
+
+    useEffect(() => {
+        if (!state.isOpen) return;
+
+        const getUsers = async () => {
+            setIsLoadingUsers(true);
+            try {
+                const queryParams = new URLSearchParams({
+                    search: debouncedUserSearch,
+                    page: String(userPage),
+                    rows: String(userRows),
+                });
+
+                const response = await fetchData('GET', `User/paginate?${queryParams.toString()}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+
+                const data: GetPaginatedResponseDto<PaginatedUser> = await response.json();
+                setUsersResponse(data);
+            } catch {
+                setUsersResponse(EMPTY_USERS);
+                toast.error('Failed to fetch users. Please try again later.');
+            } finally {
+                setIsLoadingUsers(false);
+            }
+        };
+
+        getUsers();
+    }, [debouncedUserSearch, state.isOpen, userPage, userRows]);
+
+    const createNewStudent = async (userId: string) => {
+        if (userId?.length <= 0) return;
+        setIsSubmitting(true);
+        try {
+            const nomalizedCampusCode = (state.data?.academicProgram?.college?.campus?.campusShortName ?? '')
+                .replaceAll(' ', '')
+                .replaceAll('-', '')
+                .replaceAll('_', '')
+                .toLowerCase();
+            const payload = {
+                userId,
+                sectionName: state.data?.sectionName ?? '',
+                cycleId: state.data?.cycleId ?? 0,
+                academicProgramId: state.data?.academicProgramId ?? 0,
+                courseId: state.data?.courseId ?? 0,
+                campusCode: nomalizedCampusCode,
+                enrollmentRoleId: 1, // Assuming '1' corresponds to the default student role
+            };
+
+            const response = await fetchData('POST', 'EnrollmentBackdoor/create', {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create student enrollment');
+            }
+
+            setSelectedUserId('');
+            toast.success('Student successfully added.');
+            state.closeFn();
+        } catch {
+            toast.error('Failed to add student. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <Modal controller={state} title="Add Student" size="3xl">
+            <div className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="user-search">Search User</Label>
+                    <Input
+                        id="user-search"
+                        value={userSearch}
+                        onChange={(event) => setUserSearch(event.target.value)}
+                        placeholder="Search by name or email..."
+                        disabled={isLoadingUsers || isSubmitting}
+                    />
+                </div>
+
+                <div className="rounded-md border">
+                    <div className="max-h-80 overflow-auto">
+                        {isLoadingUsers && (
+                            <div className="p-4 text-sm text-muted-foreground">Loading users...</div>
+                        )}
+
+                        {!isLoadingUsers && usersResponse.data.length === 0 && (
+                            <div className="p-4 text-sm text-muted-foreground">No users found.</div>
+                        )}
+
+                        {!isLoadingUsers && usersResponse.data.map((user) => {
+                            const isSelected = selectedUserId === user.id;
+
+                            return (
+                                <button
+                                    key={user.id}
+                                    type="button"
+                                    onClick={() => setSelectedUserId(user.id)}
+                                    className={`w-full border-b p-3 text-left last:border-b-0 ${isSelected ? 'bg-muted' : 'bg-background hover:bg-muted/50'}`}
+                                >
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div className="min-w-0">
+                                            <p className="truncate text-sm font-medium">{user.fullName ?? user.userName ?? user.email ?? user.id}</p>
+                                            <p className="truncate text-xs text-muted-foreground">{user.email ?? 'No email'}</p>
+                                        </div>
+                                        <Badge variant={isSelected ? 'default' : 'outline'}>
+                                            {isSelected ? 'Selected' : (user.role ?? 'User')}
+                                        </Badge>
+                                    </div>
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <p>Total users: {usersResponse.paginationMeta.totalItems}</p>
+                    <div className="flex items-center gap-2">
+                        <span>Rows</span>
+                        <Select value={String(userRows)} onValueChange={(value) => { setUserRows(Number(value)); setUserPage(1); }}>
+                            <SelectTrigger className="h-8 w-20">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {[10, 25, 50].map((rowValue) => (
+                                    <SelectItem key={rowValue} value={String(rowValue)}>
+                                        {rowValue}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setUserPage((previousPage) => Math.max(1, previousPage - 1))}
+                        disabled={userPage <= 1 || isLoadingUsers || isSubmitting}
+                    >
+                        Prev
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                        {usersResponse.paginationMeta.page} / {usersResponse.paginationMeta.totalPages}
+                    </span>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setUserPage((previousPage) => Math.min(usersResponse.paginationMeta.totalPages, previousPage + 1))}
+                        disabled={userPage >= usersResponse.paginationMeta.totalPages || isLoadingUsers || isSubmitting}
+                    >
+                        Next
+                    </Button>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={state.closeFn} disabled={isSubmitting}>
+                        Cancel
+                    </Button>
+                    <Button
+                        onClick={() => createNewStudent(selectedUserId)}
+                        disabled={!selectedUserId || isSubmitting}
+                    >
+                        {isSubmitting ? 'Creating...' : 'Create'}
+                    </Button>
+                </div>
+            </div>
+        </Modal>
+    );
+}
+
+export default function FacultySectionsPage(): React.ReactNode {
+    const navigate = useNavigate();
+    const [selectedFaculty] = useState<EnrollmentBackdoorDto | null>(() => {
+        const stored = localStorage.getItem('selected-faculty');
+        if (!stored) return null;
+
+        try {
+            return JSON.parse(stored) as EnrollmentBackdoorDto;
+        } catch {
+            return null;
+        }
+    });
+
+    const [studentsResponse, setStudentsResponse] = useState<GetPaginatedResponseDto<EnrollmentBackdoorDto>>(EMPTY_STUDENTS);
+    const [isLoadingStudents, setIsLoadingStudents] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+    const [page, setPage] = useState(1);
+    const [rows, setRows] = useState(10);
+    const addStudentModalState = useModal<EnrollmentBackdoorDto>();
+
+    useEffect(() => {
+        if (!selectedFaculty) {
+            navigate(-1);
+        }
+    }, [navigate, selectedFaculty]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchQuery(searchQuery.trim());
+            setPage(1);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    useEffect(() => {
+        if (!selectedFaculty) return;
+
+        const getFacultyStudents = async () => {
+            setIsLoadingStudents(true);
+            try {
+                const queryParams = new URLSearchParams({
+                    page: String(page),
+                    rows: String(rows),
+                });
+
+                if (debouncedSearchQuery) {
+                    queryParams.set('search', debouncedSearchQuery);
+                }
+
+                const facultyId = selectedFaculty.userId;
+                const sectionName = selectedFaculty.sectionName;
+                const cycleId = selectedFaculty.cycleId;
+                const programId = selectedFaculty.academicProgramId;
+                const courseId = selectedFaculty.courseId;
+
+                if (!facultyId || !sectionName || !cycleId || !programId || !courseId) {
+                    throw new Error('Missing required faculty section route parameters');
+                }
+
+                const response = await fetchData(
+                    'GET',
+                    `EnrollmentBackdoor/faculty/${facultyId}/section/${encodeURIComponent(sectionName)}/cycle/${cycleId}/program/${programId}/course/${courseId}/students?${queryParams.toString()}`,
+                );
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch faculty section students');
+                }
+
+                const data: GetPaginatedResponseDto<EnrollmentBackdoorDto> = await response.json();
+                setStudentsResponse(data);
+            } catch {
+                setStudentsResponse(EMPTY_STUDENTS);
+                toast.error('Failed to fetch students. Please try again later.');
+            } finally {
+                setIsLoadingStudents(false);
+            }
+        };
+
+        getFacultyStudents();
+    }, [debouncedSearchQuery, page, rows, selectedFaculty]);
+
+    const handleRowsChange = (value: string) => {
+        setRows(Number(value));
+        setPage(1);
+    };
+
+    if (!selectedFaculty) {
+        return null;
+    }
+
+    return (
+        <PageLayout
+            title="Faculty Section Students"
+            description="View enrolled students for the selected faculty section."
+            showBackButton
+            onBack={() => navigate(-1)}
+        >
+
+            <div className="grid gap-3 rounded-md border p-4 sm:grid-cols-2 xl:grid-cols-5">
+                <div>
+                    <Label className="text-xs text-muted-foreground">Faculty</Label>
+                    <p className="text-sm font-medium">{selectedFaculty.user?.fullName ?? 'N/A'}</p>
+                </div>
+                <div>
+                    <Label className="text-xs text-muted-foreground">Section</Label>
+                    <p className="text-sm font-medium">{selectedFaculty.sectionName}</p>
+                </div>
+                <div>
+                    <Label className="text-xs text-muted-foreground">Program</Label>
+                    <p className="text-sm font-medium">{selectedFaculty.academicProgram?.shortName ?? '—'}</p>
+                </div>
+                <div>
+                    <Label className="text-xs text-muted-foreground">Campus</Label>
+                    <p className="text-sm font-medium">{selectedFaculty.academicProgram?.college?.campus?.campusShortName ?? '—'}</p>
+                </div>
+                <div>
+                    <Label className="text-xs text-muted-foreground">Course</Label>
+                    <p className="text-sm font-medium">{selectedFaculty.course?.courseCode ?? '—'}</p>
+                    <p className="text-xs text-muted-foreground">{selectedFaculty.course?.courseTitle ?? 'No title'}</p>
+                    <p className="text-xs text-muted-foreground">
+                        {`Units: ${selectedFaculty.course?.lectureUnits ?? 0}Lec / ${selectedFaculty.course?.laboratoryUnits ?? 0}Lab / ${selectedFaculty.course?.creditUnits ?? 0}Cr`}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                        {selectedFaculty.course?.withLaboratory ? 'With Laboratory' : 'No Laboratory'}
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex flex-wrap items-end justify-between gap-3">
+                <div className="w-full max-w-md space-y-2">
+                    <Label htmlFor="student-search">Search Student</Label>
+                    <Input
+                        id="student-search"
+                        placeholder="Search by name, email, section, or course..."
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        disabled={isLoadingStudents}
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="default"
+                        onClick={() => addStudentModalState.openFn(selectedFaculty)}
+                    >
+                        Create
+                    </Button>
+                    <span className="text-sm text-muted-foreground">Rows per page</span>
+                    <Select value={String(rows)} onValueChange={handleRowsChange}>
+                        <SelectTrigger className="h-8 w-20">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {[10, 25, 50, 100].map((rowValue) => (
+                                <SelectItem key={rowValue} value={String(rowValue)}>
+                                    {rowValue}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <p>
+                    Total: <span className="font-semibold text-foreground">{studentsResponse.paginationMeta.totalItems}</span> student(s)
+                </p>
+            </div>
+
+            <DataTable<StudentRow>
+                columns={STUDENT_COLUMNS}
+                data={studentsResponse.data as StudentRow[]}
+                isLoading={isLoadingStudents}
+                totalPage={studentsResponse.paginationMeta.totalPages}
+                rows={rows}
+                page={page}
+                onPageChange={setPage}
+                emptyMessage={debouncedSearchQuery ? 'No students match your search.' : 'No students found for this section.'}
+            />
+
+            <AddStudentModal state={addStudentModalState} />
+        </PageLayout>
+    );
+}
+
+
