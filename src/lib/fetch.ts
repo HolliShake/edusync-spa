@@ -1,7 +1,8 @@
 
 
 
-const BASE = 'http://localhost:5263/Api';
+const BASE = import.meta.env.VITE_APP_API_URL || 'http://localhost:5263/Api';
+const FILES_BASE = import.meta.env.VITE_APP_API_FILES || 'http://localhost:5263/Files';
 
 export type MethodType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'  | 'HEAD' | 'OPTIONS';
 

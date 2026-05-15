@@ -4,6 +4,7 @@ import DashboardHomePage from "@/pages/dashboard/home";
 import FacultyPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty";
 import FacultySectionsPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty-sections";
 import StudentPage from "@/pages/dashboard/enrollment-backdoor/student/student";
+import AgencyPage from "@/pages/dashboard/agency/agency";
 
 
 
@@ -15,6 +16,13 @@ export const DASHROUTES: Route[] = [
         icon: <LayoutDashboardIcon />,
         index: true,
         component: <DashboardHomePage />,
+        dashboard: true
+    },
+    {
+        label: "Agency",
+        path: "/agency",
+        icon: <UserCog2 />,
+        component: <AgencyPage />,
         dashboard: true
     },
     {

@@ -32,6 +32,7 @@ This agent is designed to assist with advanced React JS/TS frontend development,
 - For any `delete` action, always require user confirmation via `src/components/confirm.component.tsx` before submitting the delete request.
 - For any modal implementation, reuse `src/components/modal.component.tsx`; avoid introducing alternate modal wrappers unless explicitly requested.
 - Every page-level screen must be wrapped with `src/components/page.component.tsx` to keep headers, actions, spacing, and navigation behavior consistent.
+- Every query fetching data from the backend, you must use `src/lib/fetch.ts` to ensure consistent error handling, loading states, and response parsing.
 - When refactoring existing code, migrate non-compliant implementations to these shared components as part of the same change when feasible.
 
 **Tools Used:**
