@@ -25,6 +25,9 @@ import type { EnrollmentBackdoorDto, GetPaginatedResponseDto } from '@/types';
 import { fetchData } from '@/lib/fetch';
 import { useNavigate } from 'react-router';
 import { buildQuery } from '@/lib/query';
+import { useModal } from '@/components/modal.component';
+import FacultyCreateModal from './faculty-create.modal';
+import { Plus } from 'lucide-react';
 
 
 
@@ -134,6 +137,7 @@ const buildFacultyColumns = (handleSelect: (record: EnrollmentBackdoorDto) => vo
 
 export default function FacultyPage() {
     const navigate = useNavigate();
+    const createModalState = useModal<null>();
     const [selectedCampus, setSelectedCampus] = useState('');
     const [campusCodes, setCampusCodes] = useState<string[]>([]);
     const [facultyData, setFacultyData] = useState<GetPaginatedResponseDto<EnrollmentBackdoorDto>>({ data: [], paginationMeta: { page: 1, rows: 10, totalPages: 1, totalItems: 0 } });
@@ -143,7 +147,12 @@ export default function FacultyPage() {
     const [rows, setRows] = useState(10);
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+    const [refetchKey, setRefetchKey] = useState(0);
 
+
+    const handleCreated = () => {
+        setRefetchKey((previousValue) => previousValue + 1);
+    };
 
     const handleSelect = (value: EnrollmentBackdoorDto) => {
         if (!value) return;
@@ -219,7 +228,7 @@ export default function FacultyPage() {
         };
 
         getFacultyData();
-    }, [selectedCampus, page, rows, debouncedSearchQuery]);
+    }, [selectedCampus, page, rows, debouncedSearchQuery, refetchKey]);
 
     const facultyColumns = buildFacultyColumns(handleSelect);
 
@@ -233,9 +242,21 @@ export default function FacultyPage() {
     };
 
     return (
-        <PageLayout title="Faculty Dashboard" description="Select a campus code to load faculty records." showBackButton={false}>
+        <>
+        <FacultyCreateModal state={createModalState} onCreated={handleCreated} />
+        <PageLayout
+            title="Faculty Dashboard"
+            description="Select a campus code to load faculty records."
+            showBackButton={false}
+            actions={
+                <Button size="sm" onClick={() => createModalState.openFn(null)}>
+                    <Plus className="h-4 w-4 mr-1" />
+                    Create
+                </Button>
+            }
+        >
 
-            <div className="flex gap-4 flex-wrap px-4 shrink-0">
+            <div className="flex gap-4 flex-wrap shrink-0">
                 <div className="space-y-2">
                     <Label htmlFor="campus-code">Campus Code</Label>
                     <Select value={selectedCampus} onValueChange={handleCampusChange} disabled={isLoadingCampusCodes}>
@@ -263,7 +284,7 @@ export default function FacultyPage() {
                 </div>
             </div>
 
-                <div className="flex flex-col px-4 min-w-0">
+            <div className="flex flex-col min-w-0">
                 <div className="flex items-center justify-between pb-2 mb-2">
                     <p className="text-sm text-muted-foreground">
                         {selectedCampus
@@ -297,5 +318,6 @@ export default function FacultyPage() {
                 />
             </div>
         </PageLayout>
+        </>
     );
 }

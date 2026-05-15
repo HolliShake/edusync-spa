@@ -28,6 +28,12 @@ This agent is designed to assist with advanced React JS/TS frontend development,
 - Zod validation schemas and integration code.
 - Concise explanations of changes, with progress updates and requests for clarification if requirements are unclear.
 
+**Mandatory UI Conventions:**
+- For any `delete` action, always require user confirmation via `src/components/confirm.component.tsx` before submitting the delete request.
+- For any modal implementation, reuse `src/components/modal.component.tsx`; avoid introducing alternate modal wrappers unless explicitly requested.
+- Every page-level screen must be wrapped with `src/components/page.component.tsx` to keep headers, actions, spacing, and navigation behavior consistent.
+- When refactoring existing code, migrate non-compliant implementations to these shared components as part of the same change when feasible.
+
 **Tools Used:**
 - May call: edit, runNotebooks, search, new, runCommands, runTasks, usages, vscodeAPI, problems, changes, testFailure, openSimpleBrowser, fetch, githubRepo, extensions, todos, runSubagent, runTests.
 

@@ -53,12 +53,12 @@ type CampusOption = OptionItem & {
 	shortName: string;
 };
 
-type FacultyUpdateModalProps = {
+type StudentUpdateModalProps = {
 	state: ModalState<EnrollmentBackdoorDto>;
 	onUpdated: (updated: EnrollmentBackdoorDto) => void;
 };
 
-export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateModalProps): ReactNode {
+export default function StudentUpdateModal({ state, onUpdated }: StudentUpdateModalProps): ReactNode {
 	const [campusOptions, setCampusOptions] = useState<CampusOption[]>([]);
 	const [collegeOptions, setCollegeOptions] = useState<OptionItem[]>([]);
 	const [programOptions, setProgramOptions] = useState<OptionItem[]>([]);
@@ -417,7 +417,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 				if (contentType.includes('application/json')) {
 					const responseBody = await response.json();
 					if (responseBody && typeof responseBody === 'object') {
-					updatedRecord = responseBody as EnrollmentBackdoorDto;
+						updatedRecord = responseBody as EnrollmentBackdoorDto;
 					}
 				}
 			} catch {

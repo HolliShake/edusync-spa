@@ -165,7 +165,7 @@ const EMPTY_USERS: GetPaginatedResponseDto<PaginatedUser> = {
 
 
 
-function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }): React.ReactNode {
+function AddStudentModal({ state, onCreated }: { state: ModalState<EnrollmentBackdoorDto>; onCreated: () => void }): React.ReactNode {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [usersResponse, setUsersResponse] = useState<GetPaginatedResponseDto<PaginatedUser>>(EMPTY_USERS);
     const [isLoadingUsers, setIsLoadingUsers] = useState(false);
@@ -225,11 +225,20 @@ function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }
         if (userId?.length <= 0) return;
         setIsSubmitting(true);
         try {
-            const nomalizedCampusCode = (state.data?.academicProgram?.college?.campus?.campusShortName ?? '')
+            let normalizedCampusCode = (state.data?.academicProgram?.college?.campus?.campusShortName ?? '')
                 .replaceAll(' ', '')
                 .replaceAll('-', '')
                 .replaceAll('_', '')
                 .toLowerCase();
+
+            if (normalizedCampusCode === 'ustpcdo') {
+                normalizedCampusCode = 'USTP-CDO';
+            }
+
+            if (normalizedCampusCode.length <= 0) {
+                setIsSubmitting(false);
+                return toast.error('Invalid campus code for the selected faculty section.');
+            }
 
             const parsed = createEnrollmentSchema.safeParse({
                 userId,
@@ -237,7 +246,7 @@ function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }
                 cycleId: state.data?.cycleId ?? 0,
                 academicProgramId: state.data?.academicProgramId ?? 0,
                 courseId: state.data?.courseId ?? 0,
-                campusCode: nomalizedCampusCode,
+                campusCode: normalizedCampusCode,
                 enrollmentRoleId: 1,
             });
 
@@ -262,6 +271,7 @@ function AddStudentModal({ state }: { state: ModalState<EnrollmentBackdoorDto> }
 
             setSelectedUserId('');
             toast.success('Student successfully added.');
+            onCreated();
             state.closeFn();
         } catch {
             toast.error('Failed to add student. Please try again later.');
@@ -396,16 +406,14 @@ export default function FacultySectionsPage(): React.ReactNode {
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState(10);
+    const [refetchKey, setRefetchKey] = useState(0);
     const addStudentModalState = useModal<EnrollmentBackdoorDto>();
     const editStudentModalState = useModal<EnrollmentBackdoorDto>();
     const deleteStudentModalState = useModal<EnrollmentBackdoorDto>();
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleUpdated = (updated: EnrollmentBackdoorDto) => {
-        setStudentsResponse((prev) => ({
-            ...prev,
-            data: prev.data.map((entry) => (entry.id === updated.id ? { ...entry, ...updated } : entry)),
-        }));
+    const handleUpdated = () => {
+        setRefetchKey((previousValue) => previousValue + 1);
     };
 
     const handleDelete = async (record: EnrollmentBackdoorDto) => {
@@ -415,16 +423,7 @@ export default function FacultySectionsPage(): React.ReactNode {
             if (!response.ok) throw new Error('Failed to delete enrollment');
             toast.success('Student removed successfully.');
             deleteStudentModalState.closeFn();
-            // Re-trigger student fetch by resetting page or nudging state
-            setPage((p) => p);
-            setStudentsResponse((prev) => ({
-                ...prev,
-                data: prev.data.filter((s) => s.id !== record.id),
-                paginationMeta: {
-                    ...prev.paginationMeta,
-                    totalItems: prev.paginationMeta.totalItems - 1,
-                },
-            }));
+            setRefetchKey((previousValue) => previousValue + 1);
         } catch {
             toast.error('Failed to remove student. Please try again.');
         } finally {
@@ -492,7 +491,7 @@ export default function FacultySectionsPage(): React.ReactNode {
         };
 
         getFacultyStudents();
-    }, [debouncedSearchQuery, page, rows, selectedFaculty]);
+    }, [debouncedSearchQuery, page, rows, selectedFaculty, refetchKey]);
 
     const handleRowsChange = (value: string) => {
         setRows(Number(value));
@@ -595,7 +594,7 @@ export default function FacultySectionsPage(): React.ReactNode {
                 emptyMessage={debouncedSearchQuery ? 'No students match your search.' : 'No students found for this section.'}
             />
 
-            <AddStudentModal state={addStudentModalState} />
+            <AddStudentModal state={addStudentModalState} onCreated={() => setRefetchKey((previousValue) => previousValue + 1)} />
             <FacultyUpdateModal state={editStudentModalState} onUpdated={handleUpdated} />
             <ConfirmModal<EnrollmentBackdoorDto>
                 state={deleteStudentModalState}

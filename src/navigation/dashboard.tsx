@@ -3,6 +3,7 @@ import { GraduationCap, LayoutDashboardIcon, UserCog2 } from "lucide-react";
 import DashboardHomePage from "@/pages/dashboard/home";
 import FacultyPage from "@/pages/dashboard/faculty/faculty";
 import FacultySectionsPage from "@/pages/dashboard/faculty/faculty-sections";
+import StudentPage from "@/pages/dashboard/student/student";
 
 
 
@@ -40,8 +41,9 @@ export const DASHROUTES: Route[] = [
             },
             {
                 label: "Student",
-                path: "/enrollment-backdoor/auth/student",
+                path: "/enrollment-backdoor/student",
                 icon: <GraduationCap />,
+                component: <StudentPage />,
                 children: [],
                 dashboard: true
             }

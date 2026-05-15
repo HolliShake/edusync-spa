@@ -12,6 +12,7 @@ interface PageLayoutProps {
     showBackButton?: boolean;
     onBack?: () => void;
     backButtonLabel?: string;
+    actions?: React.ReactNode;
 }
 
 export default function PageLayout({
@@ -21,6 +22,7 @@ export default function PageLayout({
     showBackButton = true,
     onBack,
     backButtonLabel = 'Back',
+    actions,
 }: PageLayoutProps): React.ReactNode {
     const navigate = useNavigate();
 
@@ -31,12 +33,15 @@ export default function PageLayout({
                     <h1 className="text-2xl font-bold">{title}</h1>
                 <p className="text-muted-foreground">{description}</p>
                 </div>
-                {showBackButton && (
-                    <Button variant="outline" onClick={onBack ?? (() => navigate(-1))} className="gap-2">
-                        <ArrowLeft className="h-4 w-4" />
-                        {backButtonLabel}
-                    </Button>
-                )}
+                <div className="flex items-center gap-2">
+                    {actions}
+                    {showBackButton && (
+                        <Button variant="outline" onClick={onBack ?? (() => navigate(-1))} className="gap-2">
+                            <ArrowLeft className="h-4 w-4" />
+                            {backButtonLabel}
+                        </Button>
+                    )}
+                </div>
             </div>
             {children}
         </div>
