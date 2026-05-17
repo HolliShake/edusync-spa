@@ -1,19 +1,20 @@
-import type { AuthDataDto } from '@/types';
-import { AuthContext } from '@/context/auth.context';
-import { Toaster } from '@/components/ui/sonner';
-import React, { useState } from 'react';
-
+import React from 'react';
+import AuthProvider from './auth.provider';
+import { ThemeProvider } from './theme-provider';
+import { Toaster } from './ui/sonner';
 
 type ProvidersProps = {
   children: React.ReactNode;
 };
 
 export default function Providers({ children }: ProvidersProps) {
-  const [authData, setAuthData] = useState<AuthDataDto | null>(null);
-
-  return <AuthContext.Provider value={{ authData, setAuthData }}>
-    {children}
-    <Toaster position="top-right" richColors closeButton />
-  </AuthContext.Provider>;
+  return (
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <AuthProvider>
+        {children}
+        <Toaster position="top-right" richColors closeButton />
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
     
