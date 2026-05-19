@@ -1,8 +1,6 @@
 import { apiGetError } from "@/lib/error";
 import { getEdusyncERPAPI } from "@/lib/orval/endpoints";
 import type { GetBuildingDto } from "@/lib/orval/model/getBuildingDto";
-import type { BuildingDto } from "@/lib/orval/model/buildingDto";
-import React from "react";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +14,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { toast } from "sonner";
 import DataTable from "@/components/table.component";
 import type { TableColumn } from "@/components/table.component";
+import type { GetPaginatedResponseDtoOfGetBuildingDto } from "@/lib/orval/model";
 
 const api = getEdusyncERPAPI();
 const ROWS_PER_PAGE = 10;
@@ -31,16 +30,13 @@ const buildingSchema = z.object({
 type BuildingForm = z.infer<typeof buildingSchema>;
 
 
-
-
-
 interface CampusBuildingsTabProps {
     campusId: number | string;
 }
 
 
-const CampusBuildingsTab: React.FC<CampusBuildingsTabProps> = ({ campusId }) => {
-    const [buildingPaginated, setBuildingPaginated] = useState<any | null>(null);
+export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps) {
+    const [buildingPaginated, setBuildingPaginated] = useState<GetPaginatedResponseDtoOfGetBuildingDto>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const modal = useModal<GetBuildingDto>();
@@ -276,5 +272,3 @@ const CampusBuildingsTab: React.FC<CampusBuildingsTabProps> = ({ campusId }) => 
         </div>
     );
 };
-
-export default CampusBuildingsTab;
