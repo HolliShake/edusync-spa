@@ -34,6 +34,8 @@ This agent is designed to assist with advanced React JS/TS frontend development,
 - Every page-level screen must be wrapped with `src/components/page.component.tsx` to keep headers, actions, spacing, and navigation behavior consistent.
 - Every query fetching data from the backend, you must use `src/lib/fetch.ts` to ensure consistent error handling, loading states, and response parsing.
 - When refactoring existing code, migrate non-compliant implementations to these shared components as part of the same change when feasible.
+- Always follow the existing code style and conventions of the project, including file organization, naming conventions, and coding patterns.
+- Always follow css styling for colors at `src/index.css` and use Tailwind CSS utility classes for layout and spacing.
 
 **Tools Used:**
 - May call: edit, runNotebooks, search, new, runCommands, runTasks, usages, vscodeAPI, problems, changes, testFailure, openSimpleBrowser, fetch, githubRepo, extensions, todos, runSubagent, runTests.

@@ -13,7 +13,7 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export interface TableColumn<TRow extends Record<string, unknown>> {
-    header: string;
+    header: string | React.ReactNode;
     accessor: string;
     render?: (value: unknown, row: TRow) => ReactNode;
 }
@@ -60,8 +60,10 @@ export default function DataTable<TRow extends Record<string, unknown>>({
                     <TableHeader>
                         <TableRow>
                             {columns.map((column) => (
-                                <TableHead key={column.header}>
-                                    {column.header}
+                                <TableHead key={column.accessor}>
+                                    {typeof column.header === 'function' || typeof column.header === 'object'
+                                        ? column.header
+                                        : String(column.header)}
                                 </TableHead>
                             ))}
                         </TableRow>

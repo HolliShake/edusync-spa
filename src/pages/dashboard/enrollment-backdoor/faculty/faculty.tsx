@@ -22,18 +22,23 @@ import {
 import DataTable, { type TableColumn } from '@/components/table.component';
 import PageLayout from '@/components/page.component';
 import type { EnrollmentBackdoorDto, GetPaginatedResponseDto } from '@/types';
-import { fetchData } from '@/lib/fetch';
+import { fetchBackdoor } from '@/lib/fetch';
 import { useNavigate } from 'react-router';
 import { buildQuery } from '@/lib/query';
 import { useModal } from '@/components/modal.component';
 import FacultyCreateModal from './faculty-create.modal';
+import FacultyUpdateModal from './faculty-update.modal';
 import { Plus } from 'lucide-react';
 
 
 
 type FacultyRow = EnrollmentBackdoorDto & Record<string, unknown>;
 
-const buildFacultyColumns = (handleSelect: (record: EnrollmentBackdoorDto) => void): TableColumn<FacultyRow>[] => [
+const buildFacultyColumns = (
+    handleSelect: (record: EnrollmentBackdoorDto) => void,
+    handleEdit: (record: EnrollmentBackdoorDto) => void,
+    handleDelete: (record: EnrollmentBackdoorDto) => void,
+): TableColumn<FacultyRow>[] => [
     {
         header: 'Campus',
         accessor: 'academicProgram.college.campus.campusShortName',
@@ -120,11 +125,11 @@ const buildFacultyColumns = (handleSelect: (record: EnrollmentBackdoorDto) => vo
                             <Eye className="h-4 w-4" />
                             <span>View</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
+                        <DropdownMenuItem className="cursor-pointer flex items-center gap-2" onClick={() => handleEdit(row as EnrollmentBackdoorDto)}>
                             <Pencil className="h-4 w-4" />
                             <span>Edit</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer flex items-center gap-2 text-destructive">
+                        <DropdownMenuItem className="cursor-pointer flex items-center gap-2 text-destructive" onClick={() => handleDelete(row as EnrollmentBackdoorDto)}>
                             <Trash2 className="h-4 w-4" />
                             <span>Delete</span>
                         </DropdownMenuItem>
@@ -138,6 +143,7 @@ const buildFacultyColumns = (handleSelect: (record: EnrollmentBackdoorDto) => vo
 export default function FacultyPage() {
     const navigate = useNavigate();
     const createModalState = useModal<null>();
+    const updateModalState = useModal<EnrollmentBackdoorDto>();
     const [selectedCampus, setSelectedCampus] = useState('');
     const [campusCodes, setCampusCodes] = useState<string[]>([]);
     const [facultyData, setFacultyData] = useState<GetPaginatedResponseDto<EnrollmentBackdoorDto>>({ data: [], paginationMeta: { page: 1, rows: 10, totalPages: 1, totalItems: 0 } });
@@ -160,11 +166,32 @@ export default function FacultyPage() {
         navigate('/enrollment-backdoor/faculty/sections?' + buildQuery({'userId': 'userId', 'sectionName': 'sectionName', 'cycleId': 'cycleId', 'courseId': 'courseId', 'academicProgramId': 'programId'}, value));
     };
 
+    const handleEdit = (value: EnrollmentBackdoorDto) => {
+        updateModalState.openFn(value);
+    };
+
+    const handleDelete = async (value: EnrollmentBackdoorDto) => {
+        if (!confirm('Are you sure you want to delete this faculty enrollment?')) {
+            return;
+        }
+
+        try {
+            const response = await fetchBackdoor('DELETE', `EnrollmentBackdoor/${value.id}`);
+            if (!response.ok) {
+                throw new Error('Failed to delete faculty enrollment');
+            }
+            toast.success('Faculty enrollment deleted successfully');
+            setRefetchKey((previousValue) => previousValue + 1);
+        } catch {
+            toast.error('Failed to delete faculty enrollment. Please try again later.');
+        }
+    };
+
     useEffect(() => {
         const getCampusCodes = async () => {
             setIsLoadingCampusCodes(true);
             try {
-                const response = await fetchData('GET', 'EnrollmentBackdoor/campus-codes');
+                const response = await fetchBackdoor('GET', 'EnrollmentBackdoor/campus-codes');
                 if (!response.ok) {
                     throw new Error('Failed to fetch campus codes');
                 }
@@ -205,7 +232,7 @@ export default function FacultyPage() {
                     ...(debouncedSearchQuery && { search: debouncedSearchQuery }),
                 });
 
-                const response = await fetchData(
+                const response = await fetchBackdoor(
                     'GET',
                     `EnrollmentBackdoor/faculty?${queryParams.toString()}`,
                     {
@@ -230,7 +257,7 @@ export default function FacultyPage() {
         getFacultyData();
     }, [selectedCampus, page, rows, debouncedSearchQuery, refetchKey]);
 
-    const facultyColumns = buildFacultyColumns(handleSelect);
+    const facultyColumns = buildFacultyColumns(handleSelect, handleEdit, handleDelete);
 
     const handleCampusChange = (campusCode: string) => {
         if (!campusCode) {
@@ -244,6 +271,7 @@ export default function FacultyPage() {
     return (
         <>
         <FacultyCreateModal state={createModalState} onCreated={handleCreated} />
+        <FacultyUpdateModal state={updateModalState} onUpdated={handleCreated} />
         <PageLayout
             title="Faculty Dashboard"
             description="Select a campus code to load faculty records."

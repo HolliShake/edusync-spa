@@ -12,7 +12,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { fetchData } from '@/lib/fetch';
+import { fetchBackdoor } from '@/lib/fetch';
 import type { EnrollmentBackdoorDto, GetPaginatedResponseDto } from '@/types';
 import { useEffect, useState, useRef, type ReactNode } from 'react';
 import { toast } from 'sonner';
@@ -59,7 +59,7 @@ export default function StudentTransferModal({ state, onTransferred }: StudentTr
 		const getCampusCodes = async () => {
 			setIsLoadingCampusCodes(true);
 			try {
-				const response = await fetchData('GET', 'EnrollmentBackdoor/campus-codes');
+				const response = await fetchBackdoor('GET', 'EnrollmentBackdoor/campus-codes');
 				if (!response.ok) {
 					throw new Error('Failed to fetch campus codes');
 				}
@@ -99,7 +99,7 @@ export default function StudentTransferModal({ state, onTransferred }: StudentTr
 					...(debouncedSearchQuery && { search: debouncedSearchQuery }),
 				});
 
-				const response = await fetchData(
+				const response = await fetchBackdoor(
 					'GET',
 					`EnrollmentBackdoor/faculty?${queryParams.toString()}`,
 					{
@@ -147,7 +147,7 @@ export default function StudentTransferModal({ state, onTransferred }: StudentTr
 			};
 
 			// Submit update to API
-			const response = await fetchData('PUT', `EnrollmentBackdoor/update/${state.data.id}`, {
+			const response = await fetchBackdoor('PUT', `EnrollmentBackdoor/update/${state.data.id}`, {
 				headers: {
 					'Content-Type': 'application/json',
 				},

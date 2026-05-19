@@ -22,7 +22,7 @@ import {
 import DataTable, { type TableColumn } from '@/components/table.component';
 import PageLayout from '@/components/page.component';
 import type { EnrollmentBackdoorDto, GetPaginatedResponseDto } from '@/types';
-import { fetchData } from '@/lib/fetch';
+import { fetchBackdoor } from '@/lib/fetch';
 import { useModal } from '@/components/modal.component';
 import FacultyCreateModal from '@/pages/dashboard/enrollment-backdoor/faculty/faculty-create.modal';
 import StudentUpdateModal from './student-update.modal';
@@ -179,7 +179,7 @@ export default function StudentPage() {
 		const getCampusCodes = async () => {
 			setIsLoadingCampusCodes(true);
 			try {
-				const response = await fetchData('GET', 'EnrollmentBackdoor/campus-codes');
+				const response = await fetchBackdoor('GET', 'EnrollmentBackdoor/campus-codes');
 				if (!response.ok) {
 					throw new Error('Failed to fetch campus codes');
 				}
@@ -220,7 +220,7 @@ export default function StudentPage() {
 					...(debouncedSearchQuery && { search: debouncedSearchQuery }),
 				});
 
-				const response = await fetchData(
+				const response = await fetchBackdoor(
 					'GET',
 					`EnrollmentBackdoor/students?${queryParams.toString()}`,
 					{

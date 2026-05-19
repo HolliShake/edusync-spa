@@ -9,7 +9,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { fetchData } from '@/lib/fetch';
+import { fetchBackdoor } from '@/lib/fetch';
 import type { AcademicProgramDto, CampusDto, CollegeDto, Course, CycleDto, EnrollmentBackdoorDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
@@ -159,7 +159,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 		const getCampuses = async () => {
 			setIsLoadingCampuses(true);
 			try {
-				const response = await fetchData('GET', 'Campus/all');
+				const response = await fetchBackdoor('GET', 'Campus/all');
 				if (!response.ok) {
 					throw new Error('Failed to fetch campuses');
 				}
@@ -209,7 +209,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 		const getColleges = async () => {
 			setIsLoadingColleges(true);
 			try {
-				const response = await fetchData('GET', `College/Campus/${selectedCampusId}`);
+				const response = await fetchBackdoor('GET', `College/Campus/${selectedCampusId}`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch colleges');
 				}
@@ -250,7 +250,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 		const getCycles = async () => {
 			setIsLoadingCycles(true);
 			try {
-				const response = await fetchData('GET', `Cycle/Campus/${selectedCampusId}`);
+				const response = await fetchBackdoor('GET', `Cycle/Campus/${selectedCampusId}`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch cycles');
 				}
@@ -297,7 +297,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 		const getPrograms = async () => {
 			setIsLoadingPrograms(true);
 			try {
-				const response = await fetchData('GET', `AcademicProgram/College/${selectedCollegeId}`);
+				const response = await fetchBackdoor('GET', `AcademicProgram/College/${selectedCollegeId}`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch academic programs');
 				}
@@ -338,7 +338,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 		const getCourses = async () => {
 			setIsLoadingCourses(true);
 			try {
-				const response = await fetchData('GET', `Course/all`);
+				const response = await fetchBackdoor('GET', `Course/all`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch courses');
 				}
@@ -395,7 +395,7 @@ export default function FacultyUpdateModal({ state, onUpdated }: FacultyUpdateMo
 		};
 
 		try {
-			const response = await fetchData('PUT', `EnrollmentBackdoor/update/${record.id}`, {
+			const response = await fetchBackdoor('PUT', `EnrollmentBackdoor/update/${record.id}`, {
 				headers: {
 					'Content-Type': 'application/json',
 				},

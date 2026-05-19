@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { fetchData } from '@/lib/fetch';
+import { fetchBackdoor } from '@/lib/fetch';
 import { cn } from '@/lib/utils';
 import type { AcademicProgramDto, CampusDto, CollegeDto, Course, CycleDto, EnrollmentBackdoorDto, GetPaginatedResponseDto } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -193,7 +193,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 		const getCampuses = async () => {
 			setIsLoadingCampuses(true);
 			try {
-				const response = await fetchData('GET', 'Campus/all');
+				const response = await fetchBackdoor('GET', 'Campus/all');
 				if (!response.ok) throw new Error();
 				const payload: CampusDto[] = await response.json();
 				if (isCancelled) return;
@@ -227,7 +227,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 					page: '1',
 					rows: '10',
 				});
-				const response = await fetchData('GET', `User/paginate?${queryParams.toString()}`);
+				const response = await fetchBackdoor('GET', `User/paginate?${queryParams.toString()}`);
 				if (!response.ok) {
 					throw new Error('Failed to fetch users');
 				}
@@ -261,7 +261,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 		const getCourses = async () => {
 			setIsLoadingCourses(true);
 			try {
-				const response = await fetchData('GET', 'Course/all');
+				const response = await fetchBackdoor('GET', 'Course/all');
 				if (!response.ok) throw new Error();
 				const payload: Course[] = await response.json();
 				if (isCancelled) return;
@@ -298,7 +298,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 		const getColleges = async () => {
 			setIsLoadingColleges(true);
 			try {
-				const response = await fetchData('GET', `College/Campus/${selectedCampusId}`);
+				const response = await fetchBackdoor('GET', `College/Campus/${selectedCampusId}`);
 				if (!response.ok) throw new Error();
 				const payload: CollegeDto[] = await response.json();
 				if (isCancelled) return;
@@ -321,7 +321,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 		const getCycles = async () => {
 			setIsLoadingCycles(true);
 			try {
-				const response = await fetchData('GET', `Cycle/Campus/${selectedCampusId}`);
+				const response = await fetchBackdoor('GET', `Cycle/Campus/${selectedCampusId}`);
 				if (!response.ok) throw new Error();
 				const payload: CycleDto[] = await response.json();
 				if (isCancelled) return;
@@ -354,7 +354,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 		const getPrograms = async () => {
 			setIsLoadingPrograms(true);
 			try {
-				const response = await fetchData('GET', `AcademicProgram/College/${selectedCollegeId}`);
+				const response = await fetchBackdoor('GET', `AcademicProgram/College/${selectedCollegeId}`);
 				if (!response.ok) throw new Error();
 				const payload: AcademicProgramDto[] = await response.json();
 				if (isCancelled) return;
@@ -395,7 +395,7 @@ export default function FacultyCreateModal({ state, onCreated }: FacultyCreateMo
 		};
 
 		try {
-			const response = await fetchData('POST', 'EnrollmentBackdoor/create', {
+			const response = await fetchBackdoor('POST', 'EnrollmentBackdoor/create', {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),
 			});

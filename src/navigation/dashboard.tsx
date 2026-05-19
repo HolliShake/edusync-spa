@@ -1,10 +1,11 @@
 import type { Route } from "@/types";
 import { GraduationCap, LayoutDashboardIcon, UserCog2 } from "lucide-react";
-import DashboardHomePage from "@/pages/dashboard/home";
+import DashboardHomePage from "@/pages/dashboard/dashboard";
 import FacultyPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty";
-import FacultySectionsPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty-sections";
-import StudentPage from "@/pages/dashboard/enrollment-backdoor/student/student";
-import AgencyPage from "@/pages/dashboard/agency/agency";
+import FacultySectionsPage from "@/pages/dashboard/enrollment-backdoor/faculty/faculty-sections.page";
+import StudentPage from "@/pages/dashboard/enrollment-backdoor/student/student.page";
+import AgencyPage from "@/pages/dashboard/agency/agency.page";
+import AgencyAndCampusPage from "@/pages/dashboard/agency/agency-and-campus.page";
 
 
 
@@ -23,7 +24,18 @@ export const DASHROUTES: Route[] = [
         path: "/agency",
         icon: <UserCog2 />,
         component: <AgencyPage />,
-        dashboard: true
+        dashboard: true,
+        children: [
+            {
+                label: "Agency List",
+                path: "/agency/:agencyCode/:campusCode/:campusId",
+                icon: <UserCog2 />,
+                component: <AgencyAndCampusPage />,
+                children: [],
+                dashboard: true,
+                subroute: true
+            }
+        ]
     },
     {
         label: "Enrollment Backdoor",

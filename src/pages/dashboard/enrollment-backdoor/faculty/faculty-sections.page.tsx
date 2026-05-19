@@ -1,4 +1,4 @@
-import { fetchData } from '@/lib/fetch';
+import { fetchBackdoor } from '@/lib/fetch';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -202,7 +202,7 @@ function AddStudentModal({ state, onCreated }: { state: ModalState<EnrollmentBac
                     rows: String(userRows),
                 });
 
-                const response = await fetchData('GET', `User/paginate?${queryParams.toString()}`);
+                const response = await fetchBackdoor('GET', `User/paginate?${queryParams.toString()}`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch users');
@@ -258,7 +258,7 @@ function AddStudentModal({ state, onCreated }: { state: ModalState<EnrollmentBac
 
             const payload = parsed.data;
 
-            const response = await fetchData('POST', 'EnrollmentBackdoor/create', {
+            const response = await fetchBackdoor('POST', 'EnrollmentBackdoor/create', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -419,7 +419,7 @@ export default function FacultySectionsPage(): React.ReactNode {
     const handleDelete = async (record: EnrollmentBackdoorDto) => {
         setIsDeleting(true);
         try {
-            const response = await fetchData('DELETE', `EnrollmentBackdoor/delete/${record.id}`);
+            const response = await fetchBackdoor('DELETE', `EnrollmentBackdoor/delete/${record.id}`);
             if (!response.ok) throw new Error('Failed to delete enrollment');
             toast.success('Student removed successfully.');
             deleteStudentModalState.closeFn();
@@ -471,7 +471,7 @@ export default function FacultySectionsPage(): React.ReactNode {
                     throw new Error('Missing required faculty section route parameters');
                 }
 
-                const response = await fetchData(
+                const response = await fetchBackdoor(
                     'GET',
                     `EnrollmentBackdoor/faculty/${facultyId}/section/${encodeURIComponent(sectionName)}/cycle/${cycleId}/program/${programId}/course/${courseId}/students?${queryParams.toString()}`,
                 );
