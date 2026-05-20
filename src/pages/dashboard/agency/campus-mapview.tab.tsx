@@ -8,13 +8,21 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import type React from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 
-// Fix default marker icon issue in Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+// --- TYPE-SAFE FIX FOR DEFAULT MARKER ICON ISSUE ---
+// Define an interface extending Leaflet's internal prototype structure without using 'any'
+interface LeafletIconDefaultPrototype {
+  _getIconUrl?: unknown;
+}
+
+// Safely cast and delete the hidden internal method
+delete (L.Icon.Default.prototype as LeafletIconDefaultPrototype)._getIconUrl;
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 });
+// ---------------------------------------------------
 
 interface CampusMapViewTabProps {
   lat: number | string; // Adjusted to allow string fallbacks from your API

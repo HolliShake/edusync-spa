@@ -40,9 +40,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import { apiGetError } from '@/lib/error';
 import { getEdusyncERPAPI } from '@/lib/orval/endpoints';
-import type { GetPaginatedResponseDtoOfGetBuildingDto } from '@/lib/orval/model';
+import type { GetPaginatedResponseDtoOfGetBuildingDto, GetRoomDto } from '@/lib/orval/model';
 import type { GetBuildingDto } from '@/lib/orval/model/getBuildingDto';
-import type { RoomDto } from '@/lib/orval/model/roomDto';
 
 const api = getEdusyncERPAPI();
 const ROWS_PER_PAGE = 10;
@@ -106,8 +105,8 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
 
   const modal = useModal<GetBuildingDto>();
   const confirmDeleteModal = useModal<GetBuildingDto>();
-  const roomModal = useModal<{ building: GetBuildingDto; room?: RoomDto }>();
-  const confirmRoomDeleteModal = useModal<{ building: GetBuildingDto; room: RoomDto }>();
+  const roomModal = useModal<{ building: GetBuildingDto; room?: GetRoomDto }>();
+  const confirmRoomDeleteModal = useModal<{ building: GetBuildingDto; room: GetRoomDto }>();
 
   const form = useForm<BuildingForm>({
     resolver: zodResolver(buildingSchema),
@@ -249,7 +248,7 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
   );
 
   const handleEditRoom = useCallback(
-    (building: GetBuildingDto, room: RoomDto) => {
+    (building: GetBuildingDto, room: GetRoomDto) => {
       roomForm.reset({
         roomName: room.roomName ?? '',
         capacity: room.capacity ?? '',
@@ -263,7 +262,7 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
   );
 
   const handleDeleteRoom = useCallback(
-    (building: GetBuildingDto, room: RoomDto) => {
+    (building: GetBuildingDto, room: GetRoomDto) => {
       confirmRoomDeleteModal.openFn({ building, room });
     },
     [confirmRoomDeleteModal]
@@ -424,7 +423,7 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
                   <div className="space-y-2">
                     {building.rooms.map((room) => (
                       <div
-                        key={(room as any).id}
+                        key={room.id}
                         className="rounded-lg border border-border bg-muted/30 px-3 py-2.5 flex items-center justify-between gap-3"
                       >
                         <div className="flex items-center gap-3 min-w-0">
@@ -442,7 +441,7 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
                               </span>
                               <span className="flex items-center gap-1 text-xs text-muted-foreground font-mono">
                                 <Hash className="w-3 h-3" />
-                                {String((room as any).id).padStart(6, '0')}
+                                {String(room.id).padStart(6, '0')}
                               </span>
                               {room.isLab && (
                                 <Badge className="h-4 text-[10px] px-1.5 bg-blue-500/10 text-blue-600 border-blue-400/30 hover:bg-blue-500/20">
@@ -528,7 +527,6 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
               {...form.register('buildingName')}
               placeholder="e.g. Main Building"
               disabled={isSubmitting}
-              autoFocus
             />
           </Field>
           <div className="grid grid-cols-2 gap-3">
@@ -594,7 +592,7 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
             try {
               const buildingId = roomModal.data?.building.id;
               if (roomModal.data?.room) {
-                await api.updateRoom(Number((roomModal.data.room as any).id), {
+                await api.updateRoom(Number(roomModal.data.room?.id), {
                   ...values,
                   buildingId,
                 });
@@ -619,7 +617,6 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
               {...roomForm.register('roomName')}
               placeholder="e.g. Room 101"
               disabled={isSubmitting}
-              autoFocus
             />
           </Field>
           <Field label="Capacity" error={roomForm.formState.errors.capacity?.message}>
@@ -705,8 +702,8 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
         description={(data) => (
           <>
             Are you sure you want to delete room{' '}
-            <b>{data?.room?.roomName ?? `#${String((data?.room as any)?.id).padStart(6, '0')}`}</b>?{' '}
-            This action cannot be undone.
+            <b>{data?.room?.roomName ?? `#${String(data?.room?.id).padStart(6, '0')}`}</b>? This
+            action cannot be undone.
           </>
         )}
         confirmLabel="Delete"
@@ -715,7 +712,7 @@ export default function CampusBuildingsTab({ campusId }: CampusBuildingsTabProps
         onConfirm={async (data) => {
           setIsSubmitting(true);
           try {
-            await api.deleteRoom(Number((data.room as any).id));
+            await api.deleteRoom(Number(data.room?.id));
             toast.success('Room deleted');
             confirmRoomDeleteModal.closeFn();
             keepOpen(data.building.id); // ensure accordion stays open

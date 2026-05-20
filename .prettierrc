@@ -6,7 +6,6 @@
   "trailingComma": "es5",
   "bracketSpacing": true,
   "arrowParens": "always",
-  "endOfLine": "auto",
-  "useTabs": false,
-  "plugins": ["prettier-plugin-organize-imports"]
+  "endOfLine": "lf",
+  "useTabs": false
 }

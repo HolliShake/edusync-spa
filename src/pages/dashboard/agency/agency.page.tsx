@@ -613,26 +613,31 @@ export default function AgencyPage(): React.ReactNode {
                                 key={campus.id}
                                 className="flex items-center justify-between gap-3 p-3 bg-background rounded-md border"
                               >
-                                <div
-                                  className="flex items-center gap-3 flex-1 min-w-0 hover:cursor-pointer"
-                                  onClick={() => handleCampusClick(agency, campus)}
-                                >
-                                  <Avatar className="h-8 w-8 shrink-0">
-                                    {campusImageUrl && (
-                                      <AvatarImage src={campusImageUrl} alt={campusName} />
-                                    )}
-                                    <AvatarFallback className="text-xs font-semibold">
-                                      {campusInitials}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                    <p className="font-medium text-sm mb-0!">{campusName}</p>
-                                    {campus.address && (
-                                      <p className="text-xs text-muted-foreground truncate">
-                                        {campus.address}
+                                <div className="flex items-center gap-3 flex-1 min-w-0 hover:cursor-pointer">
+                                  <button
+                                    onClick={() => handleCampusClick(agency, campus)}
+                                    className="flex items-center gap-3 w-full p-2 text-left"
+                                  >
+                                    <Avatar className="h-9 w-9 shrink-0 shadow-xs">
+                                      {campusImageUrl && (
+                                        <AvatarImage src={campusImageUrl} alt={campusName} />
+                                      )}
+                                      <AvatarFallback className="text-xs font-semibold bg-muted text-muted-foreground">
+                                        {campusInitials}
+                                      </AvatarFallback>
+                                    </Avatar>
+
+                                    <div className="flex-1 min-w-0 flex flex-col space-y-0.5 justify-center">
+                                      <p className="font-medium text-sm text-foreground leading-none m-0! p-0 truncate">
+                                        {campusName}
                                       </p>
-                                    )}
-                                  </div>
+                                      {campus.address && (
+                                        <p className="text-xs text-muted-foreground leading-tight m-0 p-0 truncate">
+                                          {campus.address}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </button>
                                 </div>
                                 <div className="flex items-center gap-1">
                                   <Button

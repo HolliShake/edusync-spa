@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
-import Header from '../components/navigation/header';
-import AppSideBar from '../components/navigation/sidebar';
+import Header from '@/components/navigation/header';
+import AppSideBar from '@/components/navigation/sidebar';
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -40,7 +40,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps): Rea
       {!isSidebarCollapsed && (
         <div
           className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
+          role="button"
+          tabIndex={0}
+          aria-label="Close sidebar overlay"
           onClick={() => handleSidebarToggle(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') handleSidebarToggle(true);
+          }}
         />
       )}
 

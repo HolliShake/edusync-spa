@@ -10,7 +10,6 @@ export type ModalState<T> = {
   closeFn: () => void;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useModal<T>(): ModalState<T> {
   const [isOpen, setIsOpen] = React.useState(false);
   const [data, setData] = React.useState<T | undefined>(undefined);

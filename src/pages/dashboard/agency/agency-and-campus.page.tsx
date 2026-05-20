@@ -89,7 +89,7 @@ export default function AgencyAndCampusPage(): React.ReactNode {
       }
     };
     getCampusDetails();
-  }, []);
+  }, [campusId, navigate]);
 
   const profileFields = [
     { label: 'Campus name', value: campus?.campusName, mono: false },

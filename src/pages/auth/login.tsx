@@ -61,8 +61,7 @@ export function AuthLoginPage() {
       setAuthCookies(data.accessToken, data.refreshToken);
       localStorage.setItem('accessToken', data.accessToken);
       navigate('/dashboard');
-    } catch (e) {
-      console.log(e);
+    } catch {
       alert('Unable to reach login server. Please try again.');
     }
   };

@@ -5,7 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import { customInstance } from '../orval-client/axios-instance';
+import { customInstance } from '@/lib/orval-client/axios-instance';
+
 import type {
   AcademicProgramDto,
   AcademicTermDto,

@@ -1,7 +1,7 @@
 import { GraduationCap, LayoutDashboardIcon, UserCog2 } from 'lucide-react';
 
-import AgencyAndCampusPage from '@/pages/dashboard/agency/agency-and-campus.page';
 import AgencyPage from '@/pages/dashboard/agency/agency.page';
+import AgencyAndCampusPage from '@/pages/dashboard/agency/agency-and-campus.page';
 import DashboardHomePage from '@/pages/dashboard/dashboard';
 import FacultyPage from '@/pages/dashboard/enrollment-backdoor/faculty/faculty';
 import FacultySectionsPage from '@/pages/dashboard/enrollment-backdoor/faculty/faculty-sections.page';

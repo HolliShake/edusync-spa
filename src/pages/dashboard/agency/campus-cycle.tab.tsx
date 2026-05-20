@@ -17,13 +17,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { apiGetError } from '@/lib/error';
 import {
   getEdusyncERPAPI,
   type GetPaginatedCampusCyclesGroupedByYearResult,
 } from '@/lib/orval/endpoints';
-import type { CycleDto } from '@/lib/orval/model/cycleDto';
+import type { GetCycleDto } from '@/lib/orval/model';
 
 interface CampusCycleTabProps {
   campusId: number | string;
@@ -54,8 +55,8 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Modal state for add/edit
-  const modal = useModal<{ year: string; cycle?: CycleDto }>();
-  const confirmDeleteModal = useModal<{ year: string; cycle: any }>();
+  const modal = useModal<{ year: string; cycle?: GetCycleDto }>();
+  const confirmDeleteModal = useModal<{ year: string; cycle: GetCycleDto }>();
 
   const form = useForm<CycleForm>({
     resolver: zodResolver(cycleSchema),
@@ -88,8 +89,7 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
 
   useEffect(() => {
     fetchCampusCycles(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campusId, page]);
+  }, [fetchCampusCycles, page]);
 
   // CRUD handlers
   const handleAdd = useCallback(
@@ -107,7 +107,7 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
   );
 
   const handleEdit = useCallback(
-    (year: string, cycle: CycleDto) => {
+    (year: string, cycle: GetCycleDto) => {
       form.reset({
         cycleDescription: cycle.cycleDescription ?? '',
         cycleNumber: cycle.cycleNumber ?? '',
@@ -121,7 +121,7 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
   );
 
   const handleDelete = useCallback(
-    (year: string, cycle: any) => {
+    (year: string, cycle: GetCycleDto) => {
       confirmDeleteModal.openFn({ year, cycle });
     },
     [confirmDeleteModal]
@@ -132,11 +132,25 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
     async (values: CycleForm) => {
       setIsSubmitting(true);
       try {
+        // Convert startDate and endDate to ISO string with time
+        const toISODate = (date: string) => {
+          if (!date) return '';
+          // If already has time, return as is
+          if (date.includes('T')) return date;
+          // Convert yyyy-mm-dd to ISO string with time (local time at 00:00:00)
+          const d = new Date(date);
+          return d.toISOString();
+        };
+        const payload = {
+          ...values,
+          startDate: toISODate(values.startDate),
+          endDate: toISODate(values.endDate),
+        };
         if (modal.data?.cycle) {
-          await api.updateCycle(Number((modal.data.cycle as any).id), values);
+          await api.updateCycle(Number(modal.data.cycle.id), payload);
           toast.success('Cycle updated');
         } else {
-          await api.createCycle(values);
+          await api.createCycle(payload);
           toast.success('Cycle created');
         }
         modal.closeFn();
@@ -152,10 +166,10 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
 
   // Confirm delete
   const confirmDelete = useCallback(
-    async (data: { year: string; cycle: any }) => {
+    async (data: { year: string; cycle: GetCycleDto }) => {
       setIsSubmitting(true);
       try {
-        await api.deleteCycle(Number((data.cycle as any).id));
+        await api.deleteCycle(Number(data.cycle?.id));
         toast.success('Cycle deleted');
         confirmDeleteModal.closeFn();
         fetchCampusCycles(page);
@@ -169,7 +183,7 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
   );
 
   // Table columns
-  const columns: TableColumn<any>[] = [
+  const columns: TableColumn<GetCycleDto & Record<string, unknown>>[] = [
     {
       header: 'Description',
       accessor: 'cycleDescription',
@@ -206,13 +220,13 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               className="cursor-pointer gap-2"
-              onClick={() => handleEdit(row.year, row)}
+              onClick={() => handleEdit(new Date(row.startDate).getFullYear().toString(), row)}
             >
               <Pencil className="w-4 h-4" /> Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer gap-2 text-destructive focus:text-destructive"
-              onClick={() => handleDelete(row.year, row)}
+              onClick={() => handleDelete(new Date(row.startDate).getFullYear().toString(), row)}
             >
               <Trash2 className="w-4 h-4" /> Delete
             </DropdownMenuItem>
@@ -256,8 +270,8 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
       <Modal controller={modal} title={modal.data?.cycle ? 'Edit Cycle' : 'Add Cycle'} size="sm">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <label className="block text-sm font-medium">Description</label>
-            <Input {...form.register('cycleDescription')} autoFocus disabled={isSubmitting} />
+            <Label>Description</Label>
+            <Input {...form.register('cycleDescription')} disabled={isSubmitting} />
             {form.formState.errors.cycleDescription && (
               <p className="text-xs text-destructive">
                 {form.formState.errors.cycleDescription.message}
@@ -265,7 +279,7 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
             )}
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium">Number</label>
+            <Label>Number</Label>
             <Input {...form.register('cycleNumber')} disabled={isSubmitting} />
             {form.formState.errors.cycleNumber && (
               <p className="text-xs text-destructive">
@@ -274,14 +288,14 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
             )}
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium">Start Date</label>
+            <Label>Start Date</Label>
             <Input type="date" {...form.register('startDate')} disabled={isSubmitting} />
             {form.formState.errors.startDate && (
               <p className="text-xs text-destructive">{form.formState.errors.startDate.message}</p>
             )}
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium">End Date</label>
+            <Label>End Date</Label>
             <Input type="date" {...form.register('endDate')} disabled={isSubmitting} />
             {form.formState.errors.endDate && (
               <p className="text-xs text-destructive">{form.formState.errors.endDate.message}</p>
@@ -313,8 +327,8 @@ export default function CampusCycleTab({ campusId }: CampusCycleTabProps): React
         description={(data) => (
           <>
             Are you sure you want to delete cycle{' '}
-            <b>{data?.cycle?.cycleDescription ?? `#${String((data?.cycle as any)?.id)}`}</b>? This
-            action cannot be undone.
+            <b>{data?.cycle?.cycleDescription ?? `#${String(data?.cycle?.id)}`}</b>? This action
+            cannot be undone.
           </>
         )}
         confirmLabel="Delete"

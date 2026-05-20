@@ -240,12 +240,7 @@ export default function CampusCollegesTab({ campusId }: CampusCollegesTabProps):
             <label htmlFor="collegeName" className="block text-sm font-medium mb-1">
               College Name
             </label>
-            <Input
-              id="collegeName"
-              {...form.register('collegeName')}
-              disabled={isSubmitting}
-              autoFocus
-            />
+            <Input id="collegeName" {...form.register('collegeName')} disabled={isSubmitting} />
             {form.formState.errors.collegeName && (
               <div className="text-xs text-red-500 mt-1">
                 {form.formState.errors.collegeName.message}
