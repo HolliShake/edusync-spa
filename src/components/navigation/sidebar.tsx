@@ -1,11 +1,19 @@
-import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import {
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+  useMemo,
+  useState,
+} from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { DASHROUTES } from '@/navigation/dashboard';
 import type { Route } from '@/types';
-import { NavLink, useLocation } from 'react-router-dom';
-import { isValidElement, type ReactElement, type ReactNode, cloneElement, useMemo, useState } from 'react';
 
 type AppSideBarProps = {
   isCollapsed: boolean;
@@ -85,20 +93,12 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
   const renderRouteItems = (items: Route[], depth = 0): React.ReactNode => {
     return items.map((route) => {
       const hasChildren = (route.children?.length ?? 0) > 0;
-      const isExpanded = searchQuery ? true : expandedRoutes[route.path] ?? true;
+      const isExpanded = searchQuery ? true : (expandedRoutes[route.path] ?? true);
       const isActive = isRouteActive(route.path);
 
       return (
-        <div
-          key={`${route.path}-${route.label}-${depth}`}
-          className="flex flex-col gap-1"
-        >
-          <div
-            className={cn(
-              'flex items-center',
-              isCollapsed && 'w-full justify-center'
-            )}
-          >
+        <div key={`${route.path}-${route.label}-${depth}`} className="flex flex-col gap-1">
+          <div className={cn('flex items-center', isCollapsed && 'w-full justify-center')}>
             {hasChildren ? (
               <button
                 type="button"
@@ -119,7 +119,12 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
                 </span>
                 {!isCollapsed && <span className="flex-1 truncate">{route.label}</span>}
                 {!isCollapsed && (
-                  <ChevronDown className={cn('h-3.5 w-3.5 shrink-0 transition-transform duration-200 opacity-50', !isExpanded && '-rotate-90')} />
+                  <ChevronDown
+                    className={cn(
+                      'h-3.5 w-3.5 shrink-0 transition-transform duration-200 opacity-50',
+                      !isExpanded && '-rotate-90'
+                    )}
+                  />
                 )}
               </button>
             ) : (
@@ -130,8 +135,8 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
                     'relative group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium outline-none transition-all duration-200',
                     'hover:bg-sidebar-accent hover:text-sidebar-foreground',
                     'focus-visible:ring-2 focus-visible:ring-sidebar-ring',
-                    isActive 
-                      ? 'bg-sidebar-accent text-sidebar-foreground shadow-sm' 
+                    isActive
+                      ? 'bg-sidebar-accent text-sidebar-foreground shadow-sm'
                       : 'text-sidebar-foreground/70',
                     isCollapsed && 'size-10 justify-center px-0 py-0'
                   )
@@ -176,7 +181,10 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
         <Button
           variant="ghost"
           size="icon"
-          className={cn('shrink-0 rounded-md text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent', !isCollapsed && 'ml-auto h-8 w-8')}
+          className={cn(
+            'shrink-0 rounded-md text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent',
+            !isCollapsed && 'ml-auto h-8 w-8'
+          )}
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -197,15 +205,13 @@ export default function AppSideBar({ isCollapsed, setIsCollapsed }: AppSideBarPr
       )}
       <nav className="flex-1 overflow-y-auto p-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-sidebar-border/60 hover:[&::-webkit-scrollbar-thumb]:bg-sidebar-border outline-none">
         <div className="flex flex-col gap-1">
-          {filteredRoutes.length > 0 ? (
-            renderRouteItems(filteredRoutes)
-          ) : (
-            !isCollapsed && (
-              <div className="rounded-lg border border-dashed border-sidebar-border px-3 py-4 text-center text-xs text-sidebar-foreground/60">
-                No routes found.
-              </div>
-            )
-          )}
+          {filteredRoutes.length > 0
+            ? renderRouteItems(filteredRoutes)
+            : !isCollapsed && (
+                <div className="rounded-lg border border-dashed border-sidebar-border px-3 py-4 text-center text-xs text-sidebar-foreground/60">
+                  No routes found.
+                </div>
+              )}
         </div>
       </nav>
     </aside>

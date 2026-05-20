@@ -18,13 +18,11 @@ const getApiBaseUrl = (url: string) => {
   }
 
   const normalizedUrl = url.startsWith('/') ? url : `/${url}`;
-  const isBackdoorRequest = BACKDOOR_PREFIXES.some((prefix) =>
-    normalizedUrl.startsWith(prefix),
-  );
+  const isBackdoorRequest = BACKDOOR_PREFIXES.some((prefix) => normalizedUrl.startsWith(prefix));
 
   return isBackdoorRequest
-    ? import.meta.env.VITE_APP_API_BACKDOOR_URL ?? DEFAULT_BACKDOOR_API_URL
-    : import.meta.env.VITE_APP_API_URL ?? DEFAULT_API_URL;
+    ? (import.meta.env.VITE_APP_API_BACKDOOR_URL ?? DEFAULT_BACKDOOR_API_URL)
+    : (import.meta.env.VITE_APP_API_URL ?? DEFAULT_API_URL);
 };
 
 const AXIOS_INSTANCE = axios.create();

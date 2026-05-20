@@ -1,6 +1,7 @@
 import { Menu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 import { ThemeToggle } from '@/components/theme-toggle';
+import { Button } from '@/components/ui/button';
 
 type HeaderProps = {
   setIsSidebarOpen: (isCollapsed: boolean) => void;
@@ -13,7 +14,7 @@ export default function Header({ setIsSidebarOpen }: HeaderProps) {
         <Menu className="h-5 w-5" />
       </Button>
       <span className="font-semibold text-lg max-md:hidden">EduSyncEnrollment</span>
-      
+
       <div className="ml-auto flex items-center gap-2">
         <ThemeToggle />
       </div>

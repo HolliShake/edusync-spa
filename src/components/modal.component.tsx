@@ -1,6 +1,7 @@
+import React, { useMemo } from 'react';
+
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import React, { useMemo } from 'react';
 
 export type ModalState<T> = {
   isOpen: boolean;

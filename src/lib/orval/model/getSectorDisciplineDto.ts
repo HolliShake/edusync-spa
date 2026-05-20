@@ -5,7 +5,7 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetEducationalQualityAssuranceTypeDto } from "./getEducationalQualityAssuranceTypeDto";
+import type { GetEducationalQualityAssuranceTypeDto } from './getEducationalQualityAssuranceTypeDto';
 
 export interface GetSectorDisciplineDto {
   sectorDisciplineName?: string;

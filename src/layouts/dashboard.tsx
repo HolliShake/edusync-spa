@@ -1,7 +1,8 @@
-import Header from '../components/navigation/header';
-import AppSideBar from '../components/navigation/sidebar';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+
+import Header from '../components/navigation/header';
+import AppSideBar from '../components/navigation/sidebar';
 
 type DashboardLayoutProps = {
   children: ReactNode;

@@ -5,8 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetRoomDto } from "./getRoomDto";
-import type { PaginationMeta } from "./paginationMeta";
+import type { GetRoomDto } from './getRoomDto';
+import type { PaginationMeta } from './paginationMeta';
 
 export interface GetPaginatedResponseDtoOfGetRoomDto {
   data: GetRoomDto[];

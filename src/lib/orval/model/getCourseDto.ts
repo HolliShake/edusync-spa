@@ -5,7 +5,7 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetSkillsFrameworkTrackSpecializationDto } from "./getSkillsFrameworkTrackSpecializationDto";
+import type { GetSkillsFrameworkTrackSpecializationDto } from './getSkillsFrameworkTrackSpecializationDto';
 
 export interface GetCourseDto {
   courseTitle?: string;

@@ -1,11 +1,13 @@
-import { StrictMode, createElement } from 'react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router-dom';
 import './index.css';
-import Providers from '@/components/providers';
 
+import { createElement, StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, type RouteObject, RouterProvider } from 'react-router-dom';
+
+import Providers from '@/components/providers';
 import DashboardLayout from '@/layouts/dashboard';
 import DefaultLayout from '@/layouts/default';
+
 import { AUTHROUTES } from './navigation/auth';
 import { DASHROUTES } from './navigation/dashboard';
 import type { Route } from './types';
@@ -33,5 +35,5 @@ createRoot(document.getElementById('root')!).render(
     <Providers>
       <RouterProvider router={router} />
     </Providers>
-  </StrictMode>,
+  </StrictMode>
 );

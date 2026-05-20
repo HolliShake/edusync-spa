@@ -5,7 +5,7 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { KpiTypeEnum } from "./kpiTypeEnum";
+import type { KpiTypeEnum } from './kpiTypeEnum';
 
 export interface KpiDto {
   kpiName?: string;

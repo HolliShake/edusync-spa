@@ -1,11 +1,11 @@
+import { Cpu, MemoryStick, Monitor } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
-import PageLayout from "@/components/page.component";
-import { apiGetError } from "@/lib/error";
-import { getEdusyncERPAPI } from "@/lib/orval/endpoints";
-import type { GetMachineInfoDto } from "@/lib/orval/model";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Monitor, Cpu, MemoryStick } from "lucide-react";
+import PageLayout from '@/components/page.component';
+import { apiGetError } from '@/lib/error';
+import { getEdusyncERPAPI } from '@/lib/orval/endpoints';
+import type { GetMachineInfoDto } from '@/lib/orval/model';
 
 const api = getEdusyncERPAPI();
 
@@ -15,11 +15,11 @@ export default function DashboardPage() {
     cpuUsage: 0,
     hostOS: 'UNKNOWN',
     ramAvailable: 0,
-    ramUsed: 0
+    ramUsed: 0,
   });
 
   useEffect(() => {
-     const getMachineInfoData = async () => {
+    const getMachineInfoData = async () => {
       try {
         const data = await api.getMachineInfo();
         setMachine(data);
@@ -40,7 +40,8 @@ export default function DashboardPage() {
           <p className="text-sm text-muted-foreground">Overview</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight">Dashboard Home</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            This is the landing page inside the dashboard layout. Below is your server's machine info.
+            This is the landing page inside the dashboard layout. Below is your server's machine
+            info.
           </p>
         </section>
 
@@ -67,7 +68,9 @@ export default function DashboardPage() {
             </span>
             <p className="text-sm text-muted-foreground">RAM Used</p>
             <p className="mt-2 text-xl font-semibold tracking-tight">{machine.ramUsed} MB</p>
-            <p className="text-xs text-muted-foreground mt-1">Available: {machine.ramAvailable} MB</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Available: {machine.ramAvailable} MB
+            </p>
           </div>
         </section>
       </div>

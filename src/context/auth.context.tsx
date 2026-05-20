@@ -1,6 +1,7 @@
-import type { AuthDataDto } from '@/types';
-import { createContext, useContext } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
+import { createContext, useContext } from 'react';
+
+import type { AuthDataDto } from '@/types';
 
 export type AuthContextValue = {
   authData: AuthDataDto | null;

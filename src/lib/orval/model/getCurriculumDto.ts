@@ -5,8 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetAcademicProgramDto } from "./getAcademicProgramDto";
-import type { GetAcademicTermDto } from "./getAcademicTermDto";
+import type { GetAcademicProgramDto } from './getAcademicProgramDto';
+import type { GetAcademicTermDto } from './getAcademicTermDto';
 
 export interface GetCurriculumDto {
   curriculumName?: string;

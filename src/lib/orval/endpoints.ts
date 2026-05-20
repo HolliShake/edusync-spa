@@ -5,6 +5,7 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
+import { customInstance } from '../orval-client/axios-instance';
 import type {
   AcademicProgramDto,
   AcademicTermDto,
@@ -16,6 +17,7 @@ import type {
   CourseDto,
   CreateAgencyBody,
   CurriculumDto,
+  CycleDto,
   EducationalQualityAssuranceTypeDto,
   ExternalTokenLoginDto,
   GetAcademicProgramDto,
@@ -26,6 +28,7 @@ import type {
   GetCollegeDto,
   GetCourseDto,
   GetCurriculumDto,
+  GetCycleDto,
   GetEducationalQualityAssuranceTypeDto,
   GetKpiDto,
   GetMachineInfoDto,
@@ -33,10 +36,12 @@ import type {
   GetPaginatedAcademicTermParams,
   GetPaginatedAgencyParams,
   GetPaginatedBuildingParams,
+  GetPaginatedCampusCyclesGroupedByYearParams,
   GetPaginatedCampusParams,
   GetPaginatedCollegeParams,
   GetPaginatedCourseParams,
   GetPaginatedCurriculumParams,
+  GetPaginatedCycleParams,
   GetPaginatedEducationalQualityAssuranceTypeParams,
   GetPaginatedKpiParams,
   GetPaginatedProgramTypeParams,
@@ -48,6 +53,8 @@ import type {
   GetPaginatedResponseDtoOfGetCollegeDto,
   GetPaginatedResponseDtoOfGetCourseDto,
   GetPaginatedResponseDtoOfGetCurriculumDto,
+  GetPaginatedResponseDtoOfGetCycleDto,
+  GetPaginatedResponseDtoOfGetCycleGroupedByYearDto,
   GetPaginatedResponseDtoOfGetEducationalQualityAssuranceTypeDto,
   GetPaginatedResponseDtoOfGetKpiDto,
   GetPaginatedResponseDtoOfGetProgramTypeDto,
@@ -72,13 +79,11 @@ import type {
   SectorDisciplineDto,
   SkillsFrameworkTrackSpecializationDto,
   UserDto,
-} from "./model";
-
-import { customInstance } from "../orval-client/axios-instance";
+} from './model';
 
 export const getEdusyncERPAPI = () => {
-  const getOpenapiJson = () => {
-    return customInstance<void>({ url: `/openapi.json`, method: "GET" });
+  const unknown = () => {
+    return customInstance<void>({ url: `/openapi.json`, method: 'GET' });
   };
 
   /**
@@ -88,7 +93,7 @@ export const getEdusyncERPAPI = () => {
   const getAcademicProgramById = (id: number) => {
     return customInstance<GetAcademicProgramDto>({
       url: `/Api/AcademicProgram/${id}`,
-      method: "GET",
+      method: 'GET',
     });
   };
 
@@ -96,12 +101,10 @@ export const getEdusyncERPAPI = () => {
    * Retrieves a paginated list of all academicprograms available in the system.
    * @summary Retrieve paginated academicprograms
    */
-  const getPaginatedAcademicProgram = (
-    params?: GetPaginatedAcademicProgramParams,
-  ) => {
+  const getPaginatedAcademicProgram = (params?: GetPaginatedAcademicProgramParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetAcademicProgramDto>({
       url: `/Api/AcademicProgram/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -113,8 +116,8 @@ export const getEdusyncERPAPI = () => {
   const createAcademicProgram = (academicProgramDto: AcademicProgramDto) => {
     return customInstance<GetAcademicProgramDto>({
       url: `/Api/AcademicProgram/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: academicProgramDto,
     });
   };
@@ -123,14 +126,11 @@ export const getEdusyncERPAPI = () => {
    * Modifies existing academicprogram details using the specified unique identifier and provided payload.
    * @summary Update existing academicprogram
    */
-  const updateAcademicProgram = (
-    id: number,
-    academicProgramDto: AcademicProgramDto,
-  ) => {
+  const updateAcademicProgram = (id: number, academicProgramDto: AcademicProgramDto) => {
     return customInstance<GetAcademicProgramDto>({
       url: `/Api/AcademicProgram/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: academicProgramDto,
     });
   };
@@ -140,10 +140,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing academicprogram
    */
   const deleteAcademicProgram = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/AcademicProgram/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/AcademicProgram/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -151,22 +148,17 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a academicterm by ID
    */
   const getAcademicTermById = (id: number) => {
-    return customInstance<GetAcademicTermDto>({
-      url: `/Api/AcademicTerm/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetAcademicTermDto>({ url: `/Api/AcademicTerm/${id}`, method: 'GET' });
   };
 
   /**
    * Retrieves a paginated list of all academicterms available in the system.
    * @summary Retrieve paginated academicterms
    */
-  const getPaginatedAcademicTerm = (
-    params?: GetPaginatedAcademicTermParams,
-  ) => {
+  const getPaginatedAcademicTerm = (params?: GetPaginatedAcademicTermParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetAcademicTermDto>({
       url: `/Api/AcademicTerm/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -178,8 +170,8 @@ export const getEdusyncERPAPI = () => {
   const createAcademicTerm = (academicTermDto: AcademicTermDto) => {
     return customInstance<GetAcademicTermDto>({
       url: `/Api/AcademicTerm/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: academicTermDto,
     });
   };
@@ -191,8 +183,8 @@ export const getEdusyncERPAPI = () => {
   const updateAcademicTerm = (id: number, academicTermDto: AcademicTermDto) => {
     return customInstance<GetAcademicTermDto>({
       url: `/Api/AcademicTerm/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: academicTermDto,
     });
   };
@@ -202,10 +194,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing academicterm
    */
   const deleteAcademicTerm = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/AcademicTerm/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/AcademicTerm/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -213,10 +202,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a agency by ID
    */
   const getAgencyById = (id: number) => {
-    return customInstance<GetAgencyDto>({
-      url: `/Api/Agency/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetAgencyDto>({ url: `/Api/Agency/${id}`, method: 'GET' });
   };
 
   /**
@@ -226,7 +212,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedAgency = (params?: GetPaginatedAgencyParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetAgencyDto>({
       url: `/Api/Agency/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -255,8 +241,8 @@ export const getEdusyncERPAPI = () => {
 
     return customInstance<GetAgencyDto>({
       url: `/Api/Agency/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: formUrlEncoded,
     });
   };
@@ -268,8 +254,8 @@ export const getEdusyncERPAPI = () => {
   const updateAgency = (id: number, agencyDto: AgencyDto) => {
     return customInstance<GetAgencyDto>({
       url: `/Api/Agency/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: agencyDto,
     });
   };
@@ -279,10 +265,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing agency
    */
   const deleteAgency = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Agency/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/Agency/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -292,8 +275,8 @@ export const getEdusyncERPAPI = () => {
   const login = (loginDto: LoginDto) => {
     return customInstance<AuthDataDto>({
       url: `/Api/Auth/login`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: loginDto,
     });
   };
@@ -305,8 +288,8 @@ export const getEdusyncERPAPI = () => {
   const googleLogin = (externalTokenLoginDto: ExternalTokenLoginDto) => {
     return customInstance<AuthDataDto>({
       url: `/Api/Auth/google`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: externalTokenLoginDto,
     });
   };
@@ -318,8 +301,8 @@ export const getEdusyncERPAPI = () => {
   const microsoftLogin = (externalTokenLoginDto: ExternalTokenLoginDto) => {
     return customInstance<AuthDataDto>({
       url: `/Api/Auth/microsoft`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: externalTokenLoginDto,
     });
   };
@@ -329,23 +312,18 @@ export const getEdusyncERPAPI = () => {
    * @summary Get current session user
    */
   const getSession = () => {
-    return customInstance<GetUserDto>({
-      url: `/Api/Auth/session`,
-      method: "GET",
-    });
+    return customInstance<GetUserDto>({ url: `/Api/Auth/session`, method: 'GET' });
   };
 
   /**
    * Creates a new guest user account and returns the created user profile.
    * @summary Register a guest user
    */
-  const registerGuest = (
-    guestUserRegistrationDto: GuestUserRegistrationDto,
-  ) => {
+  const registerGuest = (guestUserRegistrationDto: GuestUserRegistrationDto) => {
     return customInstance<GetUserDto>({
       url: `/Api/Auth/register`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: guestUserRegistrationDto,
     });
   };
@@ -355,7 +333,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Logout current session
    */
   const logout = () => {
-    return customInstance<void>({ url: `/Api/Auth/logout`, method: "POST" });
+    return customInstance<void>({ url: `/Api/Auth/logout`, method: 'POST' });
   };
 
   /**
@@ -363,10 +341,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a building by ID
    */
   const getBuildingById = (id: number) => {
-    return customInstance<GetBuildingDto>({
-      url: `/Api/Building/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetBuildingDto>({ url: `/Api/Building/${id}`, method: 'GET' });
   };
 
   /**
@@ -376,7 +351,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedBuilding = (params?: GetPaginatedBuildingParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetBuildingDto>({
       url: `/Api/Building/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -388,8 +363,8 @@ export const getEdusyncERPAPI = () => {
   const createBuilding = (buildingDto: BuildingDto) => {
     return customInstance<GetBuildingDto>({
       url: `/Api/Building/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: buildingDto,
     });
   };
@@ -401,8 +376,8 @@ export const getEdusyncERPAPI = () => {
   const updateBuilding = (id: number, buildingDto: BuildingDto) => {
     return customInstance<GetBuildingDto>({
       url: `/Api/Building/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: buildingDto,
     });
   };
@@ -412,10 +387,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing building
    */
   const deleteBuilding = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Building/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/Building/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -423,10 +395,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a campus by ID
    */
   const getCampusById = (id: number) => {
-    return customInstance<GetCampusDto>({
-      url: `/Api/Campus/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetCampusDto>({ url: `/Api/Campus/${id}`, method: 'GET' });
   };
 
   /**
@@ -436,7 +405,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedCampus = (params?: GetPaginatedCampusParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetCampusDto>({
       url: `/Api/Campus/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -448,8 +417,8 @@ export const getEdusyncERPAPI = () => {
   const createCampus = (campusDto: CampusDto) => {
     return customInstance<GetCampusDto>({
       url: `/Api/Campus/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: campusDto,
     });
   };
@@ -461,8 +430,8 @@ export const getEdusyncERPAPI = () => {
   const updateCampus = (id: number, campusDto: CampusDto) => {
     return customInstance<GetCampusDto>({
       url: `/Api/Campus/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: campusDto,
     });
   };
@@ -472,10 +441,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing campus
    */
   const deleteCampus = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Campus/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/Campus/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -483,10 +449,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a college by ID
    */
   const getCollegeById = (id: number) => {
-    return customInstance<GetCollegeDto>({
-      url: `/Api/College/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetCollegeDto>({ url: `/Api/College/${id}`, method: 'GET' });
   };
 
   /**
@@ -496,7 +459,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedCollege = (params?: GetPaginatedCollegeParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetCollegeDto>({
       url: `/Api/College/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -508,8 +471,8 @@ export const getEdusyncERPAPI = () => {
   const createCollege = (collegeDto: CollegeDto) => {
     return customInstance<GetCollegeDto>({
       url: `/Api/College/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: collegeDto,
     });
   };
@@ -521,8 +484,8 @@ export const getEdusyncERPAPI = () => {
   const updateCollege = (id: number, collegeDto: CollegeDto) => {
     return customInstance<GetCollegeDto>({
       url: `/Api/College/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: collegeDto,
     });
   };
@@ -532,10 +495,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing college
    */
   const deleteCollege = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/College/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/College/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -543,10 +503,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a course by ID
    */
   const getCourseById = (id: number) => {
-    return customInstance<GetCourseDto>({
-      url: `/Api/Course/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetCourseDto>({ url: `/Api/Course/${id}`, method: 'GET' });
   };
 
   /**
@@ -556,7 +513,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedCourse = (params?: GetPaginatedCourseParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetCourseDto>({
       url: `/Api/Course/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -568,8 +525,8 @@ export const getEdusyncERPAPI = () => {
   const createCourse = (courseDto: CourseDto) => {
     return customInstance<GetCourseDto>({
       url: `/Api/Course/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: courseDto,
     });
   };
@@ -581,8 +538,8 @@ export const getEdusyncERPAPI = () => {
   const updateCourse = (id: number, courseDto: CourseDto) => {
     return customInstance<GetCourseDto>({
       url: `/Api/Course/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: courseDto,
     });
   };
@@ -592,10 +549,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing course
    */
   const deleteCourse = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Course/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/Course/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -603,10 +557,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a curriculum by ID
    */
   const getCurriculumById = (id: number) => {
-    return customInstance<GetCurriculumDto>({
-      url: `/Api/Curriculum/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetCurriculumDto>({ url: `/Api/Curriculum/${id}`, method: 'GET' });
   };
 
   /**
@@ -616,7 +567,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedCurriculum = (params?: GetPaginatedCurriculumParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetCurriculumDto>({
       url: `/Api/Curriculum/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -628,8 +579,8 @@ export const getEdusyncERPAPI = () => {
   const createCurriculum = (curriculumDto: CurriculumDto) => {
     return customInstance<GetCurriculumDto>({
       url: `/Api/Curriculum/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: curriculumDto,
     });
   };
@@ -641,8 +592,8 @@ export const getEdusyncERPAPI = () => {
   const updateCurriculum = (id: number, curriculumDto: CurriculumDto) => {
     return customInstance<GetCurriculumDto>({
       url: `/Api/Curriculum/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: curriculumDto,
     });
   };
@@ -652,10 +603,76 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing curriculum
    */
   const deleteCurriculum = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Curriculum/delete/${id}`,
-      method: "DELETE",
+    return customInstance<void>({ url: `/Api/Curriculum/delete/${id}`, method: 'DELETE' });
+  };
+
+  /**
+   * Retrieve all cycles for the given campus available in the system.
+   * @summary Retrieve all cycles for the given campus
+   */
+  const getPaginatedCampusCyclesGroupedByYear = (
+    campusId: number,
+    params?: GetPaginatedCampusCyclesGroupedByYearParams
+  ) => {
+    return customInstance<GetPaginatedResponseDtoOfGetCycleGroupedByYearDto>({
+      url: `/Api/Cycle/Campus/${campusId}`,
+      method: 'GET',
+      params,
     });
+  };
+
+  /**
+   * Fetches detailed information about a specific cycle using their identifier.
+   * @summary Retrieve a cycle by ID
+   */
+  const getCycleById = (id: number) => {
+    return customInstance<GetCycleDto>({ url: `/Api/Cycle/${id}`, method: 'GET' });
+  };
+
+  /**
+   * Retrieves a paginated list of all cycles available in the system.
+   * @summary Retrieve paginated cycles
+   */
+  const getPaginatedCycle = (params?: GetPaginatedCycleParams) => {
+    return customInstance<GetPaginatedResponseDtoOfGetCycleDto>({
+      url: `/Api/Cycle/paginate`,
+      method: 'GET',
+      params,
+    });
+  };
+
+  /**
+   * Registers a new cycle record in the system based on the provided data.
+   * @summary Create a new cycle
+   */
+  const createCycle = (cycleDto: CycleDto) => {
+    return customInstance<GetCycleDto>({
+      url: `/Api/Cycle/create`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
+      data: cycleDto,
+    });
+  };
+
+  /**
+   * Modifies existing cycle details using the specified unique identifier and provided payload.
+   * @summary Update existing cycle
+   */
+  const updateCycle = (id: number, cycleDto: CycleDto) => {
+    return customInstance<GetCycleDto>({
+      url: `/Api/Cycle/update/${id}`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
+      data: cycleDto,
+    });
+  };
+
+  /**
+   * Permanently removes a cycle record from the system based on the provided identifier.
+   * @summary Delete an existing cycle
+   */
+  const deleteCycle = (id: number) => {
+    return customInstance<void>({ url: `/Api/Cycle/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -665,7 +682,7 @@ export const getEdusyncERPAPI = () => {
   const getEducationalQualityAssuranceTypeById = (id: number) => {
     return customInstance<GetEducationalQualityAssuranceTypeDto>({
       url: `/Api/EducationalQualityAssuranceType/${id}`,
-      method: "GET",
+      method: 'GET',
     });
   };
 
@@ -674,15 +691,13 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve paginated educationalqualityassurancetypes
    */
   const getPaginatedEducationalQualityAssuranceType = (
-    params?: GetPaginatedEducationalQualityAssuranceTypeParams,
+    params?: GetPaginatedEducationalQualityAssuranceTypeParams
   ) => {
-    return customInstance<GetPaginatedResponseDtoOfGetEducationalQualityAssuranceTypeDto>(
-      {
-        url: `/Api/EducationalQualityAssuranceType/paginate`,
-        method: "GET",
-        params,
-      },
-    );
+    return customInstance<GetPaginatedResponseDtoOfGetEducationalQualityAssuranceTypeDto>({
+      url: `/Api/EducationalQualityAssuranceType/paginate`,
+      method: 'GET',
+      params,
+    });
   };
 
   /**
@@ -690,12 +705,12 @@ export const getEdusyncERPAPI = () => {
    * @summary Create a new educationalqualityassurancetype
    */
   const createEducationalQualityAssuranceType = (
-    educationalQualityAssuranceTypeDto: EducationalQualityAssuranceTypeDto,
+    educationalQualityAssuranceTypeDto: EducationalQualityAssuranceTypeDto
   ) => {
     return customInstance<GetEducationalQualityAssuranceTypeDto>({
       url: `/Api/EducationalQualityAssuranceType/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: educationalQualityAssuranceTypeDto,
     });
   };
@@ -706,12 +721,12 @@ export const getEdusyncERPAPI = () => {
    */
   const updateEducationalQualityAssuranceType = (
     id: number,
-    educationalQualityAssuranceTypeDto: EducationalQualityAssuranceTypeDto,
+    educationalQualityAssuranceTypeDto: EducationalQualityAssuranceTypeDto
   ) => {
     return customInstance<GetEducationalQualityAssuranceTypeDto>({
       url: `/Api/EducationalQualityAssuranceType/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: educationalQualityAssuranceTypeDto,
     });
   };
@@ -723,7 +738,7 @@ export const getEdusyncERPAPI = () => {
   const deleteEducationalQualityAssuranceType = (id: number) => {
     return customInstance<void>({
       url: `/Api/EducationalQualityAssuranceType/delete/${id}`,
-      method: "DELETE",
+      method: 'DELETE',
     });
   };
 
@@ -732,7 +747,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a kpi by ID
    */
   const getKpiById = (id: number) => {
-    return customInstance<GetKpiDto>({ url: `/Api/Kpi/${id}`, method: "GET" });
+    return customInstance<GetKpiDto>({ url: `/Api/Kpi/${id}`, method: 'GET' });
   };
 
   /**
@@ -742,7 +757,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedKpi = (params?: GetPaginatedKpiParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetKpiDto>({
       url: `/Api/Kpi/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -754,8 +769,8 @@ export const getEdusyncERPAPI = () => {
   const createKpi = (kpiDto: KpiDto) => {
     return customInstance<GetKpiDto>({
       url: `/Api/Kpi/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: kpiDto,
     });
   };
@@ -767,8 +782,8 @@ export const getEdusyncERPAPI = () => {
   const updateKpi = (id: number, kpiDto: KpiDto) => {
     return customInstance<GetKpiDto>({
       url: `/Api/Kpi/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: kpiDto,
     });
   };
@@ -778,10 +793,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing kpi
    */
   const deleteKpi = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Kpi/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/Kpi/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -789,10 +801,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Get machine information
    */
   const getMachineInfo = () => {
-    return customInstance<GetMachineInfoDto>({
-      url: `/Api/Machine/info`,
-      method: "GET",
-    });
+    return customInstance<GetMachineInfoDto>({ url: `/Api/Machine/info`, method: 'GET' });
   };
 
   /**
@@ -800,10 +809,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a programtype by ID
    */
   const getProgramTypeById = (id: number) => {
-    return customInstance<GetProgramTypeDto>({
-      url: `/Api/ProgramType/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetProgramTypeDto>({ url: `/Api/ProgramType/${id}`, method: 'GET' });
   };
 
   /**
@@ -813,7 +819,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedProgramType = (params?: GetPaginatedProgramTypeParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetProgramTypeDto>({
       url: `/Api/ProgramType/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -825,8 +831,8 @@ export const getEdusyncERPAPI = () => {
   const createProgramType = (programTypeDto: ProgramTypeDto) => {
     return customInstance<GetProgramTypeDto>({
       url: `/Api/ProgramType/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: programTypeDto,
     });
   };
@@ -838,8 +844,8 @@ export const getEdusyncERPAPI = () => {
   const updateProgramType = (id: number, programTypeDto: ProgramTypeDto) => {
     return customInstance<GetProgramTypeDto>({
       url: `/Api/ProgramType/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: programTypeDto,
     });
   };
@@ -849,10 +855,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing programtype
    */
   const deleteProgramType = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/ProgramType/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/ProgramType/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -860,10 +863,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a room by ID
    */
   const getRoomById = (id: number) => {
-    return customInstance<GetRoomDto>({
-      url: `/Api/Room/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetRoomDto>({ url: `/Api/Room/${id}`, method: 'GET' });
   };
 
   /**
@@ -873,7 +873,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedRoom = (params?: GetPaginatedRoomParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetRoomDto>({
       url: `/Api/Room/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -885,8 +885,8 @@ export const getEdusyncERPAPI = () => {
   const createRoom = (roomDto: RoomDto) => {
     return customInstance<GetRoomDto>({
       url: `/Api/Room/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: roomDto,
     });
   };
@@ -898,8 +898,8 @@ export const getEdusyncERPAPI = () => {
   const updateRoom = (id: number, roomDto: RoomDto) => {
     return customInstance<GetRoomDto>({
       url: `/Api/Room/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: roomDto,
     });
   };
@@ -909,10 +909,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing room
    */
   const deleteRoom = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/Room/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/Room/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -922,7 +919,7 @@ export const getEdusyncERPAPI = () => {
   const getSectorDisciplineById = (id: number) => {
     return customInstance<GetSectorDisciplineDto>({
       url: `/Api/SectorDiscipline/${id}`,
-      method: "GET",
+      method: 'GET',
     });
   };
 
@@ -930,12 +927,10 @@ export const getEdusyncERPAPI = () => {
    * Retrieves a paginated list of all sectordisciplines available in the system.
    * @summary Retrieve paginated sectordisciplines
    */
-  const getPaginatedSectorDiscipline = (
-    params?: GetPaginatedSectorDisciplineParams,
-  ) => {
+  const getPaginatedSectorDiscipline = (params?: GetPaginatedSectorDisciplineParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetSectorDisciplineDto>({
       url: `/Api/SectorDiscipline/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -947,8 +942,8 @@ export const getEdusyncERPAPI = () => {
   const createSectorDiscipline = (sectorDisciplineDto: SectorDisciplineDto) => {
     return customInstance<GetSectorDisciplineDto>({
       url: `/Api/SectorDiscipline/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: sectorDisciplineDto,
     });
   };
@@ -957,14 +952,11 @@ export const getEdusyncERPAPI = () => {
    * Modifies existing sectordiscipline details using the specified unique identifier and provided payload.
    * @summary Update existing sectordiscipline
    */
-  const updateSectorDiscipline = (
-    id: number,
-    sectorDisciplineDto: SectorDisciplineDto,
-  ) => {
+  const updateSectorDiscipline = (id: number, sectorDisciplineDto: SectorDisciplineDto) => {
     return customInstance<GetSectorDisciplineDto>({
       url: `/Api/SectorDiscipline/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: sectorDisciplineDto,
     });
   };
@@ -974,10 +966,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing sectordiscipline
    */
   const deleteSectorDiscipline = (id: number) => {
-    return customInstance<void>({
-      url: `/Api/SectorDiscipline/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/SectorDiscipline/delete/${id}`, method: 'DELETE' });
   };
 
   /**
@@ -987,7 +976,7 @@ export const getEdusyncERPAPI = () => {
   const getSkillsFrameworkTrackSpecializationById = (id: number) => {
     return customInstance<GetSkillsFrameworkTrackSpecializationDto>({
       url: `/Api/SkillsFrameworkTrackSpecialization/${id}`,
-      method: "GET",
+      method: 'GET',
     });
   };
 
@@ -996,15 +985,13 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve paginated skillsframeworktrackspecializations
    */
   const getPaginatedSkillsFrameworkTrackSpecialization = (
-    params?: GetPaginatedSkillsFrameworkTrackSpecializationParams,
+    params?: GetPaginatedSkillsFrameworkTrackSpecializationParams
   ) => {
-    return customInstance<GetPaginatedResponseDtoOfGetSkillsFrameworkTrackSpecializationDto>(
-      {
-        url: `/Api/SkillsFrameworkTrackSpecialization/paginate`,
-        method: "GET",
-        params,
-      },
-    );
+    return customInstance<GetPaginatedResponseDtoOfGetSkillsFrameworkTrackSpecializationDto>({
+      url: `/Api/SkillsFrameworkTrackSpecialization/paginate`,
+      method: 'GET',
+      params,
+    });
   };
 
   /**
@@ -1012,12 +999,12 @@ export const getEdusyncERPAPI = () => {
    * @summary Create a new skillsframeworktrackspecialization
    */
   const createSkillsFrameworkTrackSpecialization = (
-    skillsFrameworkTrackSpecializationDto: SkillsFrameworkTrackSpecializationDto,
+    skillsFrameworkTrackSpecializationDto: SkillsFrameworkTrackSpecializationDto
   ) => {
     return customInstance<GetSkillsFrameworkTrackSpecializationDto>({
       url: `/Api/SkillsFrameworkTrackSpecialization/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: skillsFrameworkTrackSpecializationDto,
     });
   };
@@ -1028,12 +1015,12 @@ export const getEdusyncERPAPI = () => {
    */
   const updateSkillsFrameworkTrackSpecialization = (
     id: number,
-    skillsFrameworkTrackSpecializationDto: SkillsFrameworkTrackSpecializationDto,
+    skillsFrameworkTrackSpecializationDto: SkillsFrameworkTrackSpecializationDto
   ) => {
     return customInstance<GetSkillsFrameworkTrackSpecializationDto>({
       url: `/Api/SkillsFrameworkTrackSpecialization/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: skillsFrameworkTrackSpecializationDto,
     });
   };
@@ -1045,7 +1032,7 @@ export const getEdusyncERPAPI = () => {
   const deleteSkillsFrameworkTrackSpecialization = (id: number) => {
     return customInstance<void>({
       url: `/Api/SkillsFrameworkTrackSpecialization/delete/${id}`,
-      method: "DELETE",
+      method: 'DELETE',
     });
   };
 
@@ -1054,10 +1041,7 @@ export const getEdusyncERPAPI = () => {
    * @summary Retrieve a user by ID
    */
   const getUserById = (id: string) => {
-    return customInstance<GetUserDto>({
-      url: `/Api/User/${id}`,
-      method: "GET",
-    });
+    return customInstance<GetUserDto>({ url: `/Api/User/${id}`, method: 'GET' });
   };
 
   /**
@@ -1067,7 +1051,7 @@ export const getEdusyncERPAPI = () => {
   const getPaginatedUser = (params?: GetPaginatedUserParams) => {
     return customInstance<GetPaginatedResponseDtoOfGetUserDto>({
       url: `/Api/User/paginate`,
-      method: "GET",
+      method: 'GET',
       params,
     });
   };
@@ -1079,8 +1063,8 @@ export const getEdusyncERPAPI = () => {
   const createUser = (userDto: UserDto) => {
     return customInstance<GetUserDto>({
       url: `/Api/User/create`,
-      method: "POST",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: userDto,
     });
   };
@@ -1092,8 +1076,8 @@ export const getEdusyncERPAPI = () => {
   const updateUser = (id: string, userDto: UserDto) => {
     return customInstance<GetUserDto>({
       url: `/Api/User/update/${id}`,
-      method: "PUT",
-      headers: { "Content-Type": "application/json-patch+json" },
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json-patch+json' },
       data: userDto,
     });
   };
@@ -1103,14 +1087,11 @@ export const getEdusyncERPAPI = () => {
    * @summary Delete an existing user
    */
   const deleteUser = (id: string) => {
-    return customInstance<void>({
-      url: `/Api/User/delete/${id}`,
-      method: "DELETE",
-    });
+    return customInstance<void>({ url: `/Api/User/delete/${id}`, method: 'DELETE' });
   };
 
   return {
-    getOpenapiJson,
+    unknown,
     getAcademicProgramById,
     getPaginatedAcademicProgram,
     createAcademicProgram,
@@ -1157,6 +1138,12 @@ export const getEdusyncERPAPI = () => {
     createCurriculum,
     updateCurriculum,
     deleteCurriculum,
+    getPaginatedCampusCyclesGroupedByYear,
+    getCycleById,
+    getPaginatedCycle,
+    createCycle,
+    updateCycle,
+    deleteCycle,
     getEducationalQualityAssuranceTypeById,
     getPaginatedEducationalQualityAssuranceType,
     createEducationalQualityAssuranceType,
@@ -1195,348 +1182,284 @@ export const getEdusyncERPAPI = () => {
     deleteUser,
   };
 };
-export type GetOpenapiJsonResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getOpenapiJson"]>>
+export type UnknownResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['unknown']>>
 >;
 export type GetAcademicProgramByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getAcademicProgramById"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getAcademicProgramById']>>
 >;
 export type GetPaginatedAcademicProgramResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getEdusyncERPAPI>["getPaginatedAcademicProgram"]
-    >
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedAcademicProgram']>>
 >;
 export type CreateAcademicProgramResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["createAcademicProgram"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createAcademicProgram']>>
 >;
 export type UpdateAcademicProgramResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateAcademicProgram"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateAcademicProgram']>>
 >;
 export type DeleteAcademicProgramResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteAcademicProgram"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteAcademicProgram']>>
 >;
 export type GetAcademicTermByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getAcademicTermById"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getAcademicTermById']>>
 >;
 export type GetPaginatedAcademicTermResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedAcademicTerm"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedAcademicTerm']>>
 >;
 export type CreateAcademicTermResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createAcademicTerm"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createAcademicTerm']>>
 >;
 export type UpdateAcademicTermResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateAcademicTerm"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateAcademicTerm']>>
 >;
 export type DeleteAcademicTermResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteAcademicTerm"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteAcademicTerm']>>
 >;
 export type GetAgencyByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getAgencyById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getAgencyById']>>
 >;
 export type GetPaginatedAgencyResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedAgency"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedAgency']>>
 >;
 export type CreateAgencyResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createAgency"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createAgency']>>
 >;
 export type UpdateAgencyResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateAgency"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateAgency']>>
 >;
 export type DeleteAgencyResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteAgency"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteAgency']>>
 >;
 export type LoginResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["login"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['login']>>
 >;
 export type GoogleLoginResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["googleLogin"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['googleLogin']>>
 >;
 export type MicrosoftLoginResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["microsoftLogin"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['microsoftLogin']>>
 >;
 export type GetSessionResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getSession"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getSession']>>
 >;
 export type RegisterGuestResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["registerGuest"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['registerGuest']>>
 >;
 export type LogoutResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["logout"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['logout']>>
 >;
 export type GetBuildingByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getBuildingById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getBuildingById']>>
 >;
 export type GetPaginatedBuildingResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedBuilding"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedBuilding']>>
 >;
 export type CreateBuildingResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createBuilding"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createBuilding']>>
 >;
 export type UpdateBuildingResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateBuilding"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateBuilding']>>
 >;
 export type DeleteBuildingResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteBuilding"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteBuilding']>>
 >;
 export type GetCampusByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getCampusById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getCampusById']>>
 >;
 export type GetPaginatedCampusResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedCampus"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedCampus']>>
 >;
 export type CreateCampusResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createCampus"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createCampus']>>
 >;
 export type UpdateCampusResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateCampus"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateCampus']>>
 >;
 export type DeleteCampusResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteCampus"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteCampus']>>
 >;
 export type GetCollegeByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getCollegeById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getCollegeById']>>
 >;
 export type GetPaginatedCollegeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedCollege"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedCollege']>>
 >;
 export type CreateCollegeResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createCollege"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createCollege']>>
 >;
 export type UpdateCollegeResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateCollege"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateCollege']>>
 >;
 export type DeleteCollegeResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteCollege"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteCollege']>>
 >;
 export type GetCourseByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getCourseById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getCourseById']>>
 >;
 export type GetPaginatedCourseResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedCourse"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedCourse']>>
 >;
 export type CreateCourseResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createCourse"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createCourse']>>
 >;
 export type UpdateCourseResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateCourse"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateCourse']>>
 >;
 export type DeleteCourseResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteCourse"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteCourse']>>
 >;
 export type GetCurriculumByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getCurriculumById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getCurriculumById']>>
 >;
 export type GetPaginatedCurriculumResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedCurriculum"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedCurriculum']>>
 >;
 export type CreateCurriculumResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createCurriculum"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createCurriculum']>>
 >;
 export type UpdateCurriculumResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateCurriculum"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateCurriculum']>>
 >;
 export type DeleteCurriculumResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteCurriculum"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteCurriculum']>>
+>;
+export type GetPaginatedCampusCyclesGroupedByYearResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedCampusCyclesGroupedByYear']>>
+>;
+export type GetCycleByIdResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getCycleById']>>
+>;
+export type GetPaginatedCycleResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedCycle']>>
+>;
+export type CreateCycleResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createCycle']>>
+>;
+export type UpdateCycleResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateCycle']>>
+>;
+export type DeleteCycleResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteCycle']>>
 >;
 export type GetEducationalQualityAssuranceTypeByIdResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["getEducationalQualityAssuranceTypeById"]
-    >
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getEducationalQualityAssuranceTypeById']>>
 >;
 export type GetPaginatedEducationalQualityAssuranceTypeResult = NonNullable<
   Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["getPaginatedEducationalQualityAssuranceType"]
-    >
+    ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedEducationalQualityAssuranceType']>
   >
 >;
 export type CreateEducationalQualityAssuranceTypeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["createEducationalQualityAssuranceType"]
-    >
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createEducationalQualityAssuranceType']>>
 >;
 export type UpdateEducationalQualityAssuranceTypeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["updateEducationalQualityAssuranceType"]
-    >
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateEducationalQualityAssuranceType']>>
 >;
 export type DeleteEducationalQualityAssuranceTypeResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["deleteEducationalQualityAssuranceType"]
-    >
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteEducationalQualityAssuranceType']>>
 >;
 export type GetKpiByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getKpiById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getKpiById']>>
 >;
 export type GetPaginatedKpiResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedKpi"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedKpi']>>
 >;
 export type CreateKpiResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createKpi"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createKpi']>>
 >;
 export type UpdateKpiResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateKpi"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateKpi']>>
 >;
 export type DeleteKpiResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteKpi"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteKpi']>>
 >;
 export type GetMachineInfoResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getMachineInfo"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getMachineInfo']>>
 >;
 export type GetProgramTypeByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getProgramTypeById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getProgramTypeById']>>
 >;
 export type GetPaginatedProgramTypeResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedProgramType"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedProgramType']>>
 >;
 export type CreateProgramTypeResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createProgramType"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createProgramType']>>
 >;
 export type UpdateProgramTypeResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateProgramType"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateProgramType']>>
 >;
 export type DeleteProgramTypeResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteProgramType"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteProgramType']>>
 >;
 export type GetRoomByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getRoomById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getRoomById']>>
 >;
 export type GetPaginatedRoomResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedRoom"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedRoom']>>
 >;
 export type CreateRoomResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createRoom"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createRoom']>>
 >;
 export type UpdateRoomResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateRoom"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateRoom']>>
 >;
 export type DeleteRoomResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteRoom"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteRoom']>>
 >;
 export type GetSectorDisciplineByIdResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["getSectorDisciplineById"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getSectorDisciplineById']>>
 >;
 export type GetPaginatedSectorDisciplineResult = NonNullable<
-  Awaited<
-    ReturnType<
-      ReturnType<typeof getEdusyncERPAPI>["getPaginatedSectorDiscipline"]
-    >
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedSectorDiscipline']>>
 >;
 export type CreateSectorDisciplineResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["createSectorDiscipline"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createSectorDiscipline']>>
 >;
 export type UpdateSectorDisciplineResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateSectorDiscipline"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateSectorDiscipline']>>
 >;
 export type DeleteSectorDisciplineResult = NonNullable<
-  Awaited<
-    ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteSectorDiscipline"]>
-  >
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteSectorDiscipline']>>
 >;
 export type GetSkillsFrameworkTrackSpecializationByIdResult = NonNullable<
   Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["getSkillsFrameworkTrackSpecializationById"]
-    >
+    ReturnType<ReturnType<typeof getEdusyncERPAPI>['getSkillsFrameworkTrackSpecializationById']>
   >
 >;
 export type GetPaginatedSkillsFrameworkTrackSpecializationResult = NonNullable<
   Awaited<
     ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["getPaginatedSkillsFrameworkTrackSpecialization"]
+      ReturnType<typeof getEdusyncERPAPI>['getPaginatedSkillsFrameworkTrackSpecialization']
     >
   >
 >;
 export type CreateSkillsFrameworkTrackSpecializationResult = NonNullable<
   Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["createSkillsFrameworkTrackSpecialization"]
-    >
+    ReturnType<ReturnType<typeof getEdusyncERPAPI>['createSkillsFrameworkTrackSpecialization']>
   >
 >;
 export type UpdateSkillsFrameworkTrackSpecializationResult = NonNullable<
   Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["updateSkillsFrameworkTrackSpecialization"]
-    >
+    ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateSkillsFrameworkTrackSpecialization']>
   >
 >;
 export type DeleteSkillsFrameworkTrackSpecializationResult = NonNullable<
   Awaited<
-    ReturnType<
-      ReturnType<
-        typeof getEdusyncERPAPI
-      >["deleteSkillsFrameworkTrackSpecialization"]
-    >
+    ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteSkillsFrameworkTrackSpecialization']>
   >
 >;
 export type GetUserByIdResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getUserById"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getUserById']>>
 >;
 export type GetPaginatedUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["getPaginatedUser"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['getPaginatedUser']>>
 >;
 export type CreateUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["createUser"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['createUser']>>
 >;
 export type UpdateUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["updateUser"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['updateUser']>>
 >;
 export type DeleteUserResult = NonNullable<
-  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>["deleteUser"]>>
+  Awaited<ReturnType<ReturnType<typeof getEdusyncERPAPI>['deleteUser']>>
 >;

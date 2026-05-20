@@ -5,7 +5,7 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetSectorDisciplineDto } from "./getSectorDisciplineDto";
+import type { GetSectorDisciplineDto } from './getSectorDisciplineDto';
 
 export interface GetSkillsFrameworkTrackSpecializationDto {
   trackSpecialization?: string;

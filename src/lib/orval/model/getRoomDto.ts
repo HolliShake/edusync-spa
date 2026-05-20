@@ -5,9 +5,10 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetBuildingDto } from "./getBuildingDto";
+import type { GetBuildingDto } from './getBuildingDto';
 
 export interface GetRoomDto {
+  roomName?: string;
   /** @pattern ^-?(?:0|[1-9]\d*)$ */
   capacity?: number | string;
   isLab?: boolean;

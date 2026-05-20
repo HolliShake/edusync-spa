@@ -5,8 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetSkillsFrameworkTrackSpecializationDto } from "./getSkillsFrameworkTrackSpecializationDto";
-import type { PaginationMeta } from "./paginationMeta";
+import type { GetSkillsFrameworkTrackSpecializationDto } from './getSkillsFrameworkTrackSpecializationDto';
+import type { PaginationMeta } from './paginationMeta';
 
 export interface GetPaginatedResponseDtoOfGetSkillsFrameworkTrackSpecializationDto {
   data: GetSkillsFrameworkTrackSpecializationDto[];

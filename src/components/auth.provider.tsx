@@ -1,7 +1,7 @@
-import type { AuthDataDto } from '@/types';
-import { AuthContext } from '@/context/auth.context';
 import React, { useState } from 'react';
 
+import { AuthContext } from '@/context/auth.context';
+import type { AuthDataDto } from '@/types';
 
 type AuthProviderProps = {
   children: React.ReactNode;
@@ -9,10 +9,5 @@ type AuthProviderProps = {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const [authData, setAuthData] = useState<AuthDataDto | null>(null);
-  return (
-    <AuthContext.Provider value={{ authData, setAuthData }}>
-        {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ authData, setAuthData }}>{children}</AuthContext.Provider>;
 }
-    

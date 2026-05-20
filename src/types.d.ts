@@ -1,7 +1,3 @@
-
-
-
-
 export interface AccessGroupActionDetail {
   accessGroupAction: {
     accessGroup: {
@@ -186,8 +182,6 @@ export interface CollegeDto {
   campus?: CampusDto;
 }
 
-
-
 export interface EnrollmentBackdoorDto {
   id: number;
   sectionName: string;
@@ -207,16 +201,15 @@ export interface EnrollmentBackdoorDto {
 }
 
 export interface Route {
-    label: string;
-    path: string;
-    icon?: React.ReactNode;
-    index?: boolean;
-    component?: React.ReactElement;
-    children?: Route[];
-    dashboard: boolean;
-    subroute?: boolean;
+  label: string;
+  path: string;
+  icon?: React.ReactNode;
+  index?: boolean;
+  component?: React.ReactElement;
+  children?: Route[];
+  dashboard: boolean;
+  subroute?: boolean;
 }
-
 
 export interface PaginationMeta {
   page: number;
@@ -225,8 +218,7 @@ export interface PaginationMeta {
   totalItems: number;
 }
 
-
 export interface GetPaginatedResponseDto<T> {
-    data: T[];
-    paginationMeta: PaginationMeta;
+  data: T[];
+  paginationMeta: PaginationMeta;
 }

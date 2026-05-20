@@ -5,8 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetCourseDto } from "./getCourseDto";
-import type { PaginationMeta } from "./paginationMeta";
+import type { GetCourseDto } from './getCourseDto';
+import type { PaginationMeta } from './paginationMeta';
 
 export interface GetPaginatedResponseDtoOfGetCourseDto {
   data: GetCourseDto[];

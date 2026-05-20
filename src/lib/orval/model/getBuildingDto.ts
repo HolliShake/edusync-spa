@@ -5,7 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetCampusDto } from "./getCampusDto";
+import type { GetCampusDto } from './getCampusDto';
+import type { GetRoomDto } from './getRoomDto';
 
 export interface GetBuildingDto {
   buildingName?: string;
@@ -16,6 +17,7 @@ export interface GetBuildingDto {
   /** @pattern ^-?(?:0|[1-9]\d*)$ */
   campusId?: number | string;
   campus?: GetCampusDto;
+  rooms?: GetRoomDto[];
   /** @pattern ^-?(?:0|[1-9]\d*)$ */
   id: number | string;
 }

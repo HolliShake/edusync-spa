@@ -5,8 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetEducationalQualityAssuranceTypeDto } from "./getEducationalQualityAssuranceTypeDto";
-import type { PaginationMeta } from "./paginationMeta";
+import type { GetEducationalQualityAssuranceTypeDto } from './getEducationalQualityAssuranceTypeDto';
+import type { PaginationMeta } from './paginationMeta';
 
 export interface GetPaginatedResponseDtoOfGetEducationalQualityAssuranceTypeDto {
   data: GetEducationalQualityAssuranceTypeDto[];

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import AuthProvider from './auth.provider';
 import { ThemeProvider } from './theme-provider';
 import { Toaster } from './ui/sonner';
@@ -17,4 +18,3 @@ export default function Providers({ children }: ProvidersProps) {
     </ThemeProvider>
   );
 }
-    

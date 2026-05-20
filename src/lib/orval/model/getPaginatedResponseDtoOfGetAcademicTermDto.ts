@@ -5,8 +5,8 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetAcademicTermDto } from "./getAcademicTermDto";
-import type { PaginationMeta } from "./paginationMeta";
+import type { GetAcademicTermDto } from './getAcademicTermDto';
+import type { PaginationMeta } from './paginationMeta';
 
 export interface GetPaginatedResponseDtoOfGetAcademicTermDto {
   data: GetAcademicTermDto[];

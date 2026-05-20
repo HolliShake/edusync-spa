@@ -5,7 +5,7 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import type { GetCampusDto } from "./getCampusDto";
+import type { GetCampusDto } from './getCampusDto';
 
 export interface GetCollegeDto {
   collegeName?: string;
