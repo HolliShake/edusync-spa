@@ -8,20 +8,11 @@
 import type { GetEducationalQualityAssuranceTypeDto } from './getEducationalQualityAssuranceTypeDto';
 
 export interface GetSectorDisciplineDto {
-  sectorDisciplineName?: string;
-  disciplineDescription?: string;
-  /**
-   * @nullable
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  sectorDisciplineId?: number | string | null;
+  sectorDisciplineName: string;
+  disciplineDescription: string;
+  sectorDisciplineId?: number;
   parentSectorDiscipline?: null | GetSectorDisciplineDto;
-  /**
-   * @nullable
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  educationalQualityAssuranceTypeId?: number | string | null;
+  educationalQualityAssuranceTypeId?: number;
   educationalQualityAssuranceType?: null | GetEducationalQualityAssuranceTypeDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  id: number;
 }

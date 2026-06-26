@@ -8,27 +8,18 @@
 import type { GetSkillsFrameworkTrackSpecializationDto } from './getSkillsFrameworkTrackSpecializationDto';
 
 export interface GetCourseDto {
-  courseTitle?: string;
-  courseCode?: string;
-  courseDescription?: string;
-  withLaboratory?: boolean;
-  isSpecialize?: boolean;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  lectureUnits?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  laboratoryUnits?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  creditUnits?: number | string;
-  isImportedFromOldSystem?: boolean;
-  /**
-   * @nullable
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  courseId?: number | string | null;
+  courseTitle: string;
+  courseCode: string;
+  courseDescription: string;
+  withLaboratory: boolean;
+  isSpecialize: boolean;
+  lectureUnits: number;
+  laboratoryUnits: number;
+  creditUnits: number;
+  isImportedFromOldSystem: boolean;
+  courseId?: number;
   parentCourse?: null | GetCourseDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  skillsFrameworkTrackSpecializationId?: number | string;
-  skillsFrameworkTrackSpecialization?: GetSkillsFrameworkTrackSpecializationDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  skillsFrameworkTrackSpecializationId: number;
+  skillsFrameworkTrackSpecialization: GetSkillsFrameworkTrackSpecializationDto;
+  id: number;
 }

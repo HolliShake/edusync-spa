@@ -7,8 +7,7 @@
  */
 
 export interface CollegeDto {
-  collegeName?: string;
-  collegeShortName?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  campusId?: number | string;
+  collegeName: string;
+  collegeShortName: string;
+  campusId: number;
 }

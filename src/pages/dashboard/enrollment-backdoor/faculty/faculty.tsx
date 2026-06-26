@@ -205,7 +205,7 @@ export default function FacultyPage() {
     }
 
     try {
-      const response = await fetchBackdoor('DELETE', `EnrollmentBackdoor/${value.id}`);
+      const response = await fetchBackdoor('DELETE', `EnrollmentBackdoor/delete/${value.id}`);
       if (!response.ok) {
         throw new Error('Failed to delete faculty enrollment');
       }

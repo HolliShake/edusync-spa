@@ -8,14 +8,11 @@
 import type { GetBuildingDto } from './getBuildingDto';
 
 export interface GetRoomDto {
-  roomName?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  capacity?: number | string;
-  isLab?: boolean;
-  isSpecializedLab?: boolean;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  buildingId?: number | string;
-  building?: GetBuildingDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  roomName: string;
+  capacity: number;
+  isLab: boolean;
+  isSpecializedLab: boolean;
+  buildingId: number;
+  building: GetBuildingDto;
+  id: number;
 }

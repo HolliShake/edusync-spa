@@ -363,72 +363,77 @@ export default function StudentTransferModal({
                   </CardContent>
                 </Card>
               ) : (
-                facultyData.data.map((record) => (
-                  <Card key={record.id} className="gap-0">
-                    <CardContent className="p-4 space-y-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold">{record.user?.fullName ?? 'N/A'}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {record.user?.email ?? `User ID: ${record.userId}`}
-                          </p>
+                facultyData.data
+                  // .filter((record) => record.sectionName === (state.data?.sectionName ?? '—'))
+                  .map((record) => (
+                    <Card key={record.id} className="gap-0">
+                      <CardContent className="p-4 space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold">
+                              {record.user?.fullName ?? 'N/A'}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {record.user?.email ?? `User ID: ${record.userId}`}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline">Year {record.yearLevel ?? '—'}</Badge>
+                            <Badge variant="outline">Term {record.termNumber ?? '—'}</Badge>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline">Year {record.yearLevel ?? '—'}</Badge>
-                          <Badge variant="outline">Term {record.termNumber ?? '—'}</Badge>
-                        </div>
-                      </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <p className="text-xs text-muted-foreground">Campus</p>
-                          <p className="font-medium">
-                            {record.academicProgram?.college?.campus?.campusShortName ?? '—'} ·{' '}
-                            {record.academicProgram?.college?.campus?.campusName ?? '—'}
-                          </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <p className="text-xs text-muted-foreground">Campus</p>
+                            <p className="font-medium">
+                              {record.academicProgram?.college?.campus?.campusShortName ?? '—'} ·{' '}
+                              {record.academicProgram?.college?.campus?.campusName ?? '—'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">College / Program</p>
+                            <p className="font-medium">
+                              {record.academicProgram?.college?.collegeShortName ?? '—'} ·{' '}
+                              {record.academicProgram?.shortName ?? '—'}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {record.academicProgram?.programName ?? '—'}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Cycle</p>
+                            <p className="font-medium">
+                              {record.cycle?.cycleDescription ?? '—'} (
+                              {record.cycle?.schoolYear ?? '—'})
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground">Course</p>
+                            <p className="font-medium">
+                              {record.course?.courseCode ?? '—'} ·{' '}
+                              {record.course?.courseTitle ?? '—'}
+                            </p>
+                          </div>
+                          <div className="md:col-span-2">
+                            <p className="text-xs text-muted-foreground">Section</p>
+                            <p className="font-medium">{record.sectionName ?? '—'}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">College / Program</p>
-                          <p className="font-medium">
-                            {record.academicProgram?.college?.collegeShortName ?? '—'} ·{' '}
-                            {record.academicProgram?.shortName ?? '—'}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {record.academicProgram?.programName ?? '—'}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Cycle</p>
-                          <p className="font-medium">
-                            {record.cycle?.cycleDescription ?? '—'} (
-                            {record.cycle?.schoolYear ?? '—'})
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Course</p>
-                          <p className="font-medium">
-                            {record.course?.courseCode ?? '—'} · {record.course?.courseTitle ?? '—'}
-                          </p>
-                        </div>
-                        <div className="md:col-span-2">
-                          <p className="text-xs text-muted-foreground">Section</p>
-                          <p className="font-medium">{record.sectionName ?? '—'}</p>
-                        </div>
-                      </div>
 
-                      <div className="flex justify-end">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleSelectFaculty(record)}
-                          disabled={isTransferring}
-                        >
-                          Select for Transfer
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                        <div className="flex justify-end">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleSelectFaculty(record)}
+                            disabled={isTransferring}
+                          >
+                            Select for Transfer
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
               )}
             </div>
           </ScrollArea>

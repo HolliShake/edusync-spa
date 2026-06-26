@@ -9,15 +9,11 @@ import type { GetCampusDto } from './getCampusDto';
 import type { GetRoomDto } from './getRoomDto';
 
 export interface GetBuildingDto {
-  buildingName?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  latitude?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  longitude?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  campusId?: number | string;
-  campus?: GetCampusDto;
+  buildingName: string;
+  latitude: number;
+  longitude: number;
+  campusId: number;
+  campus: GetCampusDto;
   rooms?: GetRoomDto[];
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  id: number;
 }

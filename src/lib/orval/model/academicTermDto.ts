@@ -7,8 +7,7 @@
  */
 
 export interface AcademicTermDto {
-  label?: string;
-  description?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  gradingPeriods?: number | string;
+  label: string;
+  description: string;
+  gradingPeriods: number;
 }

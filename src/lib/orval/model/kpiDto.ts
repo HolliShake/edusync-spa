@@ -8,15 +8,12 @@
 import type { KpiTypeEnum } from './kpiTypeEnum';
 
 export interface KpiDto {
-  kpiName?: string;
-  kpiDescription?: string;
-  kpiCode?: string;
-  isPercentage?: boolean;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  sortOrder?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  kpiStandard?: number | string;
-  kpiType?: KpiTypeEnum;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  agencyId?: number | string;
+  kpiName: string;
+  kpiDescription: string;
+  kpiCode: string;
+  isPercentage: boolean;
+  sortOrder: number;
+  kpiStandard: number;
+  kpiType: KpiTypeEnum;
+  agencyId: number;
 }

@@ -7,11 +7,8 @@
  */
 
 export interface BuildingDto {
-  buildingName?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  latitude?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  longitude?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  campusId?: number | string;
+  buildingName: string;
+  latitude: number;
+  longitude: number;
+  campusId: number;
 }

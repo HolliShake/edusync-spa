@@ -9,27 +9,21 @@ import type { GetAcademicProgramDto } from './getAcademicProgramDto';
 import type { GetAcademicTermDto } from './getAcademicTermDto';
 
 export interface GetCurriculumDto {
-  curriculumName?: string;
-  curriculumCode?: string;
-  major?: string;
-  minor?: string;
-  authorityLegal?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  totalAcademicTerm?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  minUnitsToBeHonored?: number | string;
-  startDate?: string;
-  endDate?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  maxUnits?: number | string;
-  isActive?: boolean;
-  isDefault?: boolean;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  academicTermId?: number | string;
-  academicTerm?: GetAcademicTermDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  academicProgramId?: number | string;
-  academicProgram?: GetAcademicProgramDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  curriculumName: string;
+  curriculumCode: string;
+  major: string;
+  minor: string;
+  authorityLegal: string;
+  totalAcademicTerm: number;
+  minUnitsToBeHonored: number;
+  startDate: string;
+  endDate: string;
+  maxUnits: number;
+  isActive: boolean;
+  isDefault: boolean;
+  academicTermId: number;
+  academicTerm: GetAcademicTermDto;
+  academicProgramId: number;
+  academicProgram: GetAcademicProgramDto;
+  id: number;
 }

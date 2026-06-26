@@ -7,8 +7,8 @@
  */
 
 export interface GetUserDto {
-  firstname?: string;
-  lastname?: string;
-  gender?: string;
+  firstname: string;
+  lastname: string;
+  gender: string;
   id: string;
 }

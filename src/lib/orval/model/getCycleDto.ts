@@ -8,14 +8,11 @@
 import type { GetCampusDto } from './getCampusDto';
 
 export interface GetCycleDto {
-  cycleDescription?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  cycleNumber?: number | string;
-  startDate?: string;
-  endDate?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  campusId?: number | string;
-  campus?: GetCampusDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  cycleDescription: string;
+  cycleNumber: number;
+  startDate: string;
+  endDate: string;
+  campusId: number;
+  campus: GetCampusDto;
+  id: number;
 }

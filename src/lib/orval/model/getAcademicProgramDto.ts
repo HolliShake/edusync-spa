@@ -9,15 +9,12 @@ import type { GetCollegeDto } from './getCollegeDto';
 import type { GetProgramTypeDto } from './getProgramTypeDto';
 
 export interface GetAcademicProgramDto {
-  programName?: string;
-  shortName?: string;
-  yearFirstImplemented?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  collegeId?: number | string;
-  college?: GetCollegeDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  programTypeId?: number | string;
-  programType?: GetProgramTypeDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  programName: string;
+  shortName: string;
+  yearFirstImplemented: string;
+  collegeId: number;
+  college: GetCollegeDto;
+  programTypeId: number;
+  programType: GetProgramTypeDto;
+  id: number;
 }

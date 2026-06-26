@@ -7,7 +7,6 @@
  */
 
 export interface SkillsFrameworkTrackSpecializationDto {
-  trackSpecialization?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  sectorDisciplineId?: number | string;
+  trackSpecialization: string;
+  sectorDisciplineId: number;
 }

@@ -7,7 +7,6 @@
  */
 
 export interface GetProgramTypeDto {
-  programTypeName?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  programTypeName: string;
+  id: number;
 }

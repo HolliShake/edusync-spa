@@ -7,11 +7,9 @@
  */
 
 export interface AcademicProgramDto {
-  programName?: string;
-  shortName?: string;
-  yearFirstImplemented?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  collegeId?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  programTypeId?: number | string;
+  programName: string;
+  shortName: string;
+  yearFirstImplemented: string;
+  collegeId: number;
+  programTypeId: number;
 }

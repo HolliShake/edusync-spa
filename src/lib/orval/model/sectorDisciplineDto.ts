@@ -7,16 +7,8 @@
  */
 
 export interface SectorDisciplineDto {
-  sectorDisciplineName?: string;
-  disciplineDescription?: string;
-  /**
-   * @nullable
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  sectorDisciplineId?: number | string | null;
-  /**
-   * @nullable
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  educationalQualityAssuranceTypeId?: number | string | null;
+  sectorDisciplineName: string;
+  disciplineDescription: string;
+  sectorDisciplineId?: number;
+  educationalQualityAssuranceTypeId?: number;
 }

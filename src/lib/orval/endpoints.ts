@@ -5,8 +5,6 @@
  * Edusync ERP API documentation (Development)
  * OpenAPI spec version: v1
  */
-import { customInstance } from '@/lib/orval-client/axios-instance';
-
 import type {
   AcademicProgramDto,
   AcademicTermDto,
@@ -81,6 +79,8 @@ import type {
   SkillsFrameworkTrackSpecializationDto,
   UserDto,
 } from './model';
+
+import { customInstance } from '../orval-client/axios-instance';
 
 export const getEdusyncERPAPI = () => {
   const unknown = () => {

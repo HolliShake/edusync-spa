@@ -8,12 +8,8 @@
 
 export interface GetMachineInfoDto {
   hostOS?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  ramUsed?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  ramAvailable?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  cpuUsage?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  cpuCores?: number | string;
+  ramUsed?: number;
+  ramAvailable?: number;
+  cpuUsage?: number;
+  cpuCores?: number;
 }

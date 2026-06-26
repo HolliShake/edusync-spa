@@ -8,10 +8,8 @@
 import type { GetSectorDisciplineDto } from './getSectorDisciplineDto';
 
 export interface GetSkillsFrameworkTrackSpecializationDto {
-  trackSpecialization?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  sectorDisciplineId?: number | string;
-  sectorDiscipline?: GetSectorDisciplineDto;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  trackSpecialization: string;
+  sectorDisciplineId: number;
+  sectorDiscipline: GetSectorDisciplineDto;
+  id: number;
 }

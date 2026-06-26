@@ -7,11 +7,9 @@
  */
 
 export interface RoomDto {
-  roomName?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  capacity?: number | string;
-  isLab?: boolean;
-  isSpecializedLab?: boolean;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  buildingId?: number | string;
+  roomName: string;
+  capacity: number;
+  isLab: boolean;
+  isSpecializedLab: boolean;
+  buildingId: number;
 }

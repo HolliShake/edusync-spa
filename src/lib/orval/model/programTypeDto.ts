@@ -7,5 +7,5 @@
  */
 
 export interface ProgramTypeDto {
-  programTypeName?: string;
+  programTypeName: string;
 }

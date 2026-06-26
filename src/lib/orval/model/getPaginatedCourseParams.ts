@@ -10,12 +10,6 @@ export type GetPaginatedCourseParams = {
   Fresh?: boolean;
   Search?: string;
   Filter?: string;
-  /**
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  Page?: number | string;
-  /**
-   * @pattern ^-?(?:0|[1-9]\d*)$
-   */
-  Rows?: number | string;
+  Page?: number;
+  Rows?: number;
 };

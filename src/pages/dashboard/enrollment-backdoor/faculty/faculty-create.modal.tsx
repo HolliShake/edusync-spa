@@ -490,9 +490,12 @@ export default function FacultyCreateModal({
                                 field.value === user.id ? 'opacity-100' : 'opacity-0'
                               )}
                             />
-                            <span className="truncate">
-                              {user.fullName ?? user.userName ?? user.email ?? user.id}
-                            </span>
+                            <div className="block">
+                              <span className="truncate block">
+                                {user.fullName ?? user.userName ?? user.email ?? user.id}
+                              </span>
+                              <small className="text-small">{user.email}</small>
+                            </div>
                           </CommandItem>
                         ))}
                       </CommandGroup>

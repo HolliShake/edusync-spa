@@ -8,12 +8,11 @@
 import type { GetCampusDto } from './getCampusDto';
 
 export interface GetAgencyDto {
-  agencyName?: string;
-  shortName?: string;
-  address?: string;
-  code?: string;
-  isDefault?: boolean;
+  agencyName: string;
+  shortName: string;
+  address: string;
+  code: string;
+  isDefault: boolean;
   campuses?: GetCampusDto[];
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  id: number | string;
+  id: number;
 }

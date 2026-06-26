@@ -7,11 +7,9 @@
  */
 
 export interface GetErrorDto {
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  code?: number | string;
+  code?: number;
   file: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  line?: number | string;
+  line?: number;
   member: string;
   message: string;
 }

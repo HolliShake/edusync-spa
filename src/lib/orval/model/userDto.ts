@@ -7,7 +7,7 @@
  */
 
 export interface UserDto {
-  firstname?: string;
-  lastname?: string;
-  gender?: string;
+  firstname: string;
+  lastname: string;
+  gender: string;
 }

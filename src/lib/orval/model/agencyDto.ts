@@ -7,9 +7,9 @@
  */
 
 export interface AgencyDto {
-  agencyName?: string;
-  shortName?: string;
-  address?: string;
-  code?: string;
-  isDefault?: boolean;
+  agencyName: string;
+  shortName: string;
+  address: string;
+  code: string;
+  isDefault: boolean;
 }

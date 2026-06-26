@@ -7,13 +7,10 @@
  */
 
 export interface CampusDto {
-  campusName?: string;
-  campusShortName?: string;
-  address?: string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  latitude?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?$ */
-  longitude?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  agencyId?: number | string;
+  campusName: string;
+  campusShortName: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  agencyId: number;
 }

@@ -7,14 +7,14 @@
  */
 
 export interface EducationalQualityAssuranceTypeDto {
-  name?: string;
-  shortName?: string;
-  eqaLabel1?: string;
-  eqaLabel2?: string;
-  eqaLabel3?: string;
-  eqaLabel4?: string;
-  eqaLabel5?: string;
-  eqaLabel6?: string;
-  eqaLabel7?: string;
-  eqaLabel8?: string;
+  name: string;
+  shortName: string;
+  eqaLabel1: string;
+  eqaLabel2: string;
+  eqaLabel3: string;
+  eqaLabel4: string;
+  eqaLabel5: string;
+  eqaLabel6: string;
+  eqaLabel7: string;
+  eqaLabel8: string;
 }

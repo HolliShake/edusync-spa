@@ -7,12 +7,8 @@
  */
 
 export interface PaginationMeta {
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  page?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  rows?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  totalPages?: number | string;
-  /** @pattern ^-?(?:0|[1-9]\d*)$ */
-  totalItems?: number | string;
+  page?: number;
+  rows?: number;
+  totalPages?: number;
+  totalItems?: number;
 }

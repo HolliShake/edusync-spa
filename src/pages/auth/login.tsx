@@ -41,7 +41,7 @@ export function AuthLoginPage() {
 
   const onSubmit = async (values: LoginFormValues) => {
     try {
-      const login = await fetch('https://cqi.ustp.edu.ph/dev/Api/Auth/login', {
+      const login = await fetch('https://cqi.ustp.edu.ph/experimental/Api/Auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
